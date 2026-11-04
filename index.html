@@ -696,7 +696,7 @@
 
       <form class="quote-form" id="quoteForm">
         <div>
-          <label for="qf-name">Full name</label>
+          <label for="qf-name">Name</label>
           <input id="qf-name" name="name" type="text" placeholder="Jane Smith" required>
         </div>
         <div>
@@ -704,41 +704,17 @@
           <input id="qf-phone" name="phone" type="tel" placeholder="(804) 555-0123" required>
         </div>
         <div class="full">
-          <label for="qf-email">Email</label>
+          <label for="qf-email">Email (optional)</label>
           <input id="qf-email" name="email" type="email" placeholder="jane@email.com">
         </div>
-        <div>
-          <label for="qf-town">Town</label>
-          <select id="qf-town" name="town" required>
-            <option value="" disabled selected>Select your town</option>
-            <option>Denver</option>
-            <option>Lincolnton</option>
-            <option>Mooresville</option>
-            <option>Huntersville</option>
-            <option>Cornelius</option>
-            <option>Sherrills Ford</option>
-            <option>Other (Lincoln County &amp; nearby)</option>
-          </select>
-        </div>
-        <div>
+        <div class="full">
           <label for="qf-service">Service needed</label>
           <select id="qf-service" name="service" required>
             <option value="" disabled selected>Select a service</option>
             <option>Junk Removal</option>
-            <option>Furniture Removal</option>
-            <option>Appliance Removal</option>
             <option>Construction Debris Hauling</option>
-            <option>Demolition Debris Hauling</option>
-            <option>Curbside Pickup</option>
-            <option>Rental Property Cleanouts</option>
-            <option>Apartment Cleanouts</option>
-            <option>Commercial Cleanouts</option>
-            <option>Shed Demolition &amp; Hauling</option>
-            <option>Storage Unit Cleanouts</option>
             <option>Brush &amp; Small Tree Removal</option>
-            <option>General Material Hauling</option>
-            <option>Move-Out Cleanouts</option>
-            <option>Basement, Attic &amp; Garage Cleanout</option>
+            <option>Aggregate Material Delivery/Removal</option>
             <option>Not Sure / Other (We do it all!)</option>
           </select>
         </div>
@@ -752,11 +728,11 @@
           </select>
         </div>
         <div class="full">
-          <label for="qf-details">Job details</label>
+          <label for="qf-details">Job details (optional)</label>
           <textarea id="qf-details" name="details" placeholder="What needs to go, roughly how much, and any access details (stairs, tight driveway, etc.)"></textarea>
         </div>
         <div class="full">
-          <label for="qf-photos">Photos (optional — helps us quote faster)</label>
+          <label for="qf-photos">Photos (helps us quote faster)</label>
           <input id="qf-photos" name="photos" type="file" accept="image/*" multiple>
         </div>
         <div class="submit-row">
@@ -1009,7 +985,6 @@
       const name = document.getElementById('qf-name').value.trim();
       const phone = document.getElementById('qf-phone').value.trim();
       const email = document.getElementById('qf-email').value.trim();
-      const town = document.getElementById('qf-town').value;
       const service = document.getElementById('qf-service').value;
       const contact_pref = document.getElementById('qf-contact-pref').value;
       const details = document.getElementById('qf-details').value.trim();
@@ -1027,7 +1002,7 @@
 
       const { error: insertError } = await supabaseClient
         .from('quote_requests')
-        .insert([{ name, phone, email, town, service, contact_pref, details, photo_paths: photoPaths }]);
+        .insert([{ name, phone, email, service, contact_pref, details, photo_paths: photoPaths }]);
       if (insertError) throw insertError;
 
       // Let Meta know a quote request came in — helps ad tracking/optimization
