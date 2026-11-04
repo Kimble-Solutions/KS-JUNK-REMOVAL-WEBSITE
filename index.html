@@ -33,7 +33,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- Local business structured data (helps local search / Google Maps listings) -->
-<!-- TODO: update phone, address, hours, and geo coordinates once finalized -->
+<!-- TODO: update address, hours, and geo coordinates once finalized -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -42,7 +42,7 @@
   "url": "https://kimblesolutions.com/",
   "image": "https://kimblesolutions.com/logo.png",
   "description": "Junk removal and hauling serving Denver, Lincolnton, Mooresville, Huntersville, Cornelius, Sherrills Ford, and the Lake Norman area of North Carolina.",
-  "telephone": "+17040000000",
+  "telephone": "+18043041637",
   "priceRange": "$$",
   "address": {
     "@type": "PostalAddress",
@@ -64,8 +64,8 @@
   :root{
     --charcoal:#18181b;
     --charcoal-2:#232327;
-    --maroon:#7f1d2b;
-    --maroon-bright:#a3283a;
+    --green:#183B35;
+    --green-bright:#2f7a6b;
     --paper:#f4f3ef;
     --white:#ffffff;
     --steel:#5a5a61;
@@ -90,7 +90,7 @@
   a{color:inherit;text-decoration:none;}
   img{max-width:100%;display:block;}
   .wrap{max-width:1400px;margin:0 auto;padding:0 32px;}
-  :focus-visible{outline:3px solid var(--maroon-bright);outline-offset:3px;}
+  :focus-visible{outline:3px solid var(--green-bright);outline-offset:3px;}
 
   /* ---------- Header ---------- */
   header{
@@ -111,16 +111,16 @@
     padding:6px 2px;border-bottom:2px solid transparent;
     transition:border-color 0.15s ease, color 0.15s ease;
   }
-  .main-nav a:hover{border-color:var(--maroon);color:var(--maroon);}
+  .main-nav a:hover{border-color:var(--green);color:var(--green);}
   .header-actions{display:flex;align-items:center;gap:10px;flex-shrink:0;}
   .call-btn{
-    background:var(--maroon);color:var(--white);
+    background:var(--green);color:var(--white);
     padding:12px 22px;font-weight:700;font-size:0.95rem;
     border-radius:2px;letter-spacing:0.02em;
     transition:background 0.15s ease;
     white-space:nowrap;
   }
-  .call-btn:hover{background:var(--maroon-bright);}
+  .call-btn:hover{background:var(--green-bright);}
   .call-btn.ghost{
     background:transparent;color:var(--charcoal);border:2px solid var(--charcoal);
     padding:10px 20px;
@@ -146,7 +146,7 @@
   .eyebrow{
     display:inline-block;
     font-size:0.78rem;font-weight:700;letter-spacing:0.16em;
-    text-transform:uppercase;color:var(--maroon);
+    text-transform:uppercase;color:var(--green);
     margin-bottom:18px;line-height:1.6;
   }
   .hero h1{
@@ -154,14 +154,15 @@
     color:var(--charcoal);
     margin-bottom:20px;
   }
-  .hero h1 em{font-style:normal;color:var(--maroon);}
-  .hero-photo{
-    max-width:720px;margin:0 auto 34px;
-    border-radius:6px;overflow:hidden;
-    box-shadow:0 18px 40px rgba(24,24,27,0.18);
-  }
+  .hero h1 em{font-style:normal;color:var(--green);}
+  .hero-photo{max-width:780px;margin:0 auto 34px;}
   .hero-photo img{
     display:block;width:100%;height:auto;
+    /* feather every edge so the photo melts into the white hero background */
+    -webkit-mask-image:linear-gradient(to right,transparent 0,#000 14%,#000 86%,transparent 100%),linear-gradient(to bottom,transparent 0,#000 14%,#000 80%,transparent 100%);
+    -webkit-mask-composite:source-in;
+    mask-image:linear-gradient(to right,transparent 0,#000 14%,#000 86%,transparent 100%),linear-gradient(to bottom,transparent 0,#000 14%,#000 80%,transparent 100%);
+    mask-composite:intersect;
   }
   .hero p.lead{
     max-width:520px;margin:0 auto 34px;
@@ -172,13 +173,13 @@
     margin-bottom:40px;
   }
   .btn-primary{
-    background:var(--maroon);color:var(--white);
+    background:var(--green);color:var(--white);
     padding:16px 32px;font-weight:700;font-size:1rem;
     border-radius:2px;letter-spacing:0.02em;
     transition:background 0.15s ease, transform 0.15s ease;
     display:inline-block;border:none;cursor:pointer;font-family:inherit;
   }
-  .btn-primary:hover{background:var(--maroon-bright);transform:translateY(-1px);}
+  .btn-primary:hover{background:var(--green-bright);transform:translateY(-1px);}
   .btn-secondary{
     background:transparent;color:var(--charcoal);
     padding:16px 32px;font-weight:700;font-size:1rem;
@@ -200,7 +201,7 @@
     display:flex;align-items:center;gap:9px;
     font-size:0.88rem;font-weight:600;color:var(--steel);
   }
-  .trust-item svg{width:20px;height:20px;color:var(--maroon);flex-shrink:0;}
+  .trust-item svg{width:20px;height:20px;color:var(--green);flex-shrink:0;}
 
   /* ---------- Services (charcoal band) ---------- */
   .services{
@@ -209,7 +210,7 @@
     padding:70px 0 90px;
   }
   .section-head{text-align:center;margin-bottom:48px;}
-  .section-head .eyebrow{color:var(--maroon-bright);}
+  .section-head .eyebrow{color:var(--green-bright);}
   .section-head h2{font-size:clamp(1.9rem,4vw,2.6rem);color:var(--white);}
   .why .section-head h2, .process .section-head h2, .gallery .section-head h2{color:var(--charcoal);}
   .services-grid{
@@ -230,7 +231,7 @@
   .service-card summary::-webkit-details-marker{display:none;}
   .service-card summary::marker{content:'';}
   .service-card summary svg.icon{
-    width:30px;height:30px;flex-shrink:0;color:var(--maroon-bright);
+    width:30px;height:30px;flex-shrink:0;color:var(--green-bright);
     stroke:currentColor;fill:none;stroke-width:1.5;
   }
   .service-card h3{
@@ -257,7 +258,7 @@
   .why-grid{
     display:grid;grid-template-columns:repeat(3,1fr);gap:36px;
   }
-  .why-item{border-left:3px solid var(--maroon);padding-left:20px;}
+  .why-item{border-left:3px solid var(--green);padding-left:20px;}
   .why-item h3{
     font-family:'Work Sans',sans-serif;text-transform:none;
     font-weight:700;font-size:1.15rem;letter-spacing:normal;
@@ -275,7 +276,7 @@
   .step .num{
     font-family:'Anton',sans-serif;font-size:3.2rem;
     line-height:1;margin-bottom:10px;
-    -webkit-text-stroke:1.5px var(--maroon);
+    -webkit-text-stroke:1.5px var(--green);
     color:transparent;
   }
   .step h3{
@@ -295,7 +296,7 @@
     padding:28px 26px;border-radius:2px;
     display:flex;flex-direction:column;gap:14px;
   }
-  .stars{color:var(--maroon-bright);font-size:1rem;letter-spacing:2px;}
+  .stars{color:var(--green-bright);font-size:1rem;letter-spacing:2px;}
   .testimonial-card p.quote{color:var(--charcoal);font-size:0.98rem;flex:1;}
   .testimonial-card .who{font-size:0.88rem;font-weight:700;color:var(--steel);}
   .testimonial-card .who span{font-weight:400;color:var(--steel);}
@@ -319,7 +320,7 @@
   }
   .star-rating label:hover,
   .star-rating label:hover ~ label,
-  .star-rating input:checked ~ label{color:var(--maroon-bright);}
+  .star-rating input:checked ~ label{color:var(--green-bright);}
   .review-form-wrap label.field-label{
     display:block;font-size:0.85rem;font-weight:600;margin-bottom:7px;color:var(--charcoal);
   }
@@ -346,7 +347,7 @@
     gap:10px;color:#8a8a90;
     position:relative;overflow:hidden;
   }
-  .gallery-tile svg{width:34px;height:34px;color:var(--maroon-bright);stroke:currentColor;fill:none;stroke-width:1.3;}
+  .gallery-tile svg{width:34px;height:34px;color:var(--green-bright);stroke:currentColor;fill:none;stroke-width:1.3;}
   .gallery-tile span{font-size:0.75rem;font-weight:600;letter-spacing:0.03em;text-align:center;padding:0 10px;}
   .gallery-note{
     text-align:center;color:var(--steel);font-size:0.9rem;margin-top:22px;
@@ -392,7 +393,7 @@
   .quote-form textarea::placeholder{color:#8a8a90;}
   .quote-form input:focus,
   .quote-form select:focus,
-  .quote-form textarea:focus{border-color:var(--maroon-bright);}
+  .quote-form textarea:focus{border-color:var(--green-bright);}
   .quote-form textarea{resize:vertical;min-height:100px;}
   .quote-form .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
   .quote-form .submit-row{grid-column:1/-1;text-align:center;margin-top:6px;}
@@ -419,7 +420,7 @@
 
   /* ---------- Final CTA ---------- */
   .final-cta{
-    background:var(--maroon);color:var(--white);
+    background:var(--green);color:var(--white);
     padding:70px 0 96px;text-align:center;
   }
   .final-cta h2{font-size:clamp(1.9rem,4.5vw,2.8rem);margin-bottom:20px;}
@@ -459,7 +460,7 @@
       flex:1;text-align:center;padding:13px 10px;border-radius:2px;
       font-weight:700;font-size:0.92rem;
     }
-    .mobile-cta-bar a.quote{background:var(--maroon);color:var(--white);}
+    .mobile-cta-bar a.quote{background:var(--green);color:var(--white);}
     .mobile-cta-bar a.call{background:var(--charcoal-2);color:var(--white);border:1px solid #45454b;}
     body{padding-bottom:64px;}
   }
@@ -501,7 +502,7 @@
       <a href="#contact">Get a Quote</a>
     </nav>
     <div class="header-actions">
-      <a class="call-btn" data-phone-link data-phone-display="true" href="tel:7040000000">(704) 000-0000</a>
+      <a class="call-btn" data-phone-link data-phone-display="true" href="tel:8043041637">(804) 304-1637</a>
     </div>
   </div>
 </header>
@@ -513,15 +514,13 @@
     <div class="wrap">
       <span class="eyebrow">Serving Denver, NC &amp; The Lake Norman Area<br>Junk Removal &amp; Hauling</span>
       <h1>Junk Gone.<br><em>Space Back.</em></h1>
-      <!-- TODO: add your trailer/truck photo as trailer.jpg in the same folder as index.html.
-           Until then the photo block hides itself automatically. -->
       <div class="hero-photo">
-        <img src="trailer.jpg" alt="Kimble Solutions branded dump trailer" width="718" height="561" loading="eager" onerror="this.parentElement.style.display='none'">
+        <img src="trailer.jpg" alt="The Kimble Solutions crew with their dump trailer" width="1068" height="720" loading="eager">
       </div>
-      <p class="lead">We'll show up when we say we will, tell you the price upfront, and haul it off the same day — furniture, appliances, construction debris, you name it.</p>
+      <p class="lead">Locally owned and committed to dependable service. We help homeowners and businesses clear unwanted junk from a single piece of furniture to an entire property cleanout without the hassle.</p>
       <div class="hero-ctas">
         <a class="btn-primary" href="#contact">Request a Quote Online</a>
-        <a class="btn-secondary" data-phone-link href="tel:7040000000">Call for a Free Quote</a>
+        <a class="btn-secondary" data-phone-link href="tel:8043041637">Call for a Free Quote</a>
       </div>
     </div>
 
@@ -702,7 +701,7 @@
         </div>
         <div>
           <label for="qf-phone">Phone number</label>
-          <input id="qf-phone" name="phone" type="tel" placeholder="(704) 555-0123" required>
+          <input id="qf-phone" name="phone" type="tel" placeholder="(804) 555-0123" required>
         </div>
         <div class="full">
           <label for="qf-email">Email</label>
@@ -765,7 +764,7 @@
         </div>
         <p class="form-fineprint" id="qf-status" aria-live="polite"></p>
       </form>
-      <p class="form-fineprint">Prefer to talk it through? <a data-phone-link data-phone-display="true" style="text-decoration:underline;" href="tel:7040000000">(704) 000-0000</a> — call or text anytime.</p>
+      <p class="form-fineprint">Prefer to talk it through? <a data-phone-link data-phone-display="true" style="text-decoration:underline;" href="tel:8043041637">(804) 304-1637</a> — call or text anytime.</p>
     </div>
   </section>
 
@@ -906,7 +905,7 @@
   <!-- SERVICE AREA -->
   <section class="area">
     <div class="wrap">
-      <span class="eyebrow" style="color:var(--maroon-bright)">Where We Work</span>
+      <span class="eyebrow" style="color:var(--green-bright)">Where We Work</span>
       <h2>Serving Denver &amp; Lake Norman</h2>
       <p>Based in Denver and running routes across Lincoln County and the Lake Norman area, from the lake to the foothills.</p>
       <div class="towns">
@@ -920,7 +919,7 @@
       </div>
     </div>
     <svg class="ridge" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
-      <path class="ridge-to-white" d="M0,60 L0,40 L60,18 L120,34 L200,6 L260,26 L340,10 L410,30 L480,4 L560,28 L630,14 L700,32 L780,8 L850,26 L930,12 L1000,30 L1080,16 L1150,28 L1200,20 L1200,60 Z" style="fill:var(--maroon)"/>
+      <path class="ridge-to-white" d="M0,60 L0,40 L60,18 L120,34 L200,6 L260,26 L340,10 L410,30 L480,4 L560,28 L630,14 L700,32 L780,8 L850,26 L930,12 L1000,30 L1080,16 L1150,28 L1200,20 L1200,60 Z" style="fill:var(--green)"/>
     </svg>
   </section>
 
@@ -928,7 +927,7 @@
   <section class="final-cta">
     <div class="wrap">
       <h2>Ready to clear the clutter?</h2>
-      <a class="btn-primary" data-phone-link data-phone-display="true" data-phone-suffix=" — Call Now" href="tel:7040000000">(704) 000-0000 — Call Now</a>
+      <a class="btn-primary" data-phone-link data-phone-display="true" data-phone-suffix=" — Call Now" href="tel:8043041637">(804) 304-1637 — Call Now</a>
     </div>
   </section>
 
@@ -944,7 +943,7 @@
           Junk Removal &amp; Hauling · Denver, NC
         </div>
       </div>
-      <a class="call-btn" data-phone-link data-phone-display="true" href="tel:7040000000">(704) 000-0000</a>
+      <a class="call-btn" data-phone-link data-phone-display="true" href="tel:8043041637">(804) 304-1637</a>
     </div>
     <div class="fine">
       <span>&copy; <span id="footer-year">2026</span> Kimble Solutions. Serving Denver, NC and the Lake Norman area.</span>
@@ -959,15 +958,14 @@
 <!-- Sticky mobile call/text bar -->
 <div class="mobile-cta-bar">
   <a class="quote" href="#contact">Request a Quote Online</a>
-  <a class="call" data-phone-link href="tel:7040000000">Call Now</a>
+  <a class="call" data-phone-link href="tel:8043041637">Call Now</a>
 </div>
 
 <script>
   // Centralized phone number — change it once here and every tel:/sms: link
   // and displayed number on the page updates automatically.
-  // TODO: replace with your real number (also update "telephone" in the JSON-LD block up top).
-  const PHONE_RAW = "7040000000";
-  const PHONE_DISPLAY = "(704) 000-0000";
+  const PHONE_RAW = "8043041637";
+  const PHONE_DISPLAY = "(804) 304-1637";
 
   document.querySelectorAll('[data-phone-link]').forEach(function(el){
     var isSms = el.getAttribute('href') && el.getAttribute('href').indexOf('sms:') === 0;
