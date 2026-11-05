@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Invoices | Kimble Solutions</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--charcoal:#18181b;--charcoal-2:#232327;--green:#183B35;--green-bright:#2f7a6b;--paper:#f4f3ef;--steel:#5a5a61;--line:#dedcd5;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Work Sans',sans-serif;background:var(--paper);color:var(--charcoal);}
+  header{background:var(--charcoal);color:#fff;padding:18px 28px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10;flex-wrap:wrap;gap:10px;}
+  header h1{font-family:'Anton',sans-serif;text-transform:uppercase;font-size:1.1rem;letter-spacing:0.02em;}
+  header .actions{display:flex;gap:10px;}
+  header a, header button{
+    background:transparent;border:1px solid #45454b;color:#fff;padding:9px 16px;border-radius:2px;
+    cursor:pointer;font-family:inherit;font-weight:600;font-size:0.9rem;text-decoration:none;display:inline-block;
+  }
+  header a:hover, header button:hover{background:var(--charcoal-2);}
+  main{max-width:1000px;margin:0 auto;padding:36px 24px 90px;}
+  h2{font-family:'Anton',sans-serif;text-transform:uppercase;font-size:1.25rem;margin-bottom:18px;}
+  section{margin-bottom:56px;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:3px;padding:24px;}
+  .empty{color:var(--steel);font-size:0.95rem;}
+
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+  .field-row.full{grid-template-columns:1fr;}
+  label{display:block;font-size:0.85rem;font-weight:600;margin-bottom:7px;}
+  input, select, textarea{
+    width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:2px;
+    font-family:inherit;font-size:0.92rem;
+  }
+  textarea{resize:vertical;min-height:70px;}
+
+  .load-job-row{display:flex;gap:10px;align-items:flex-end;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--line);}
+  .load-job-row > div{flex:1;}
+  .load-job-row button{
+    background:var(--charcoal);color:#fff;border:none;padding:10px 18px;border-radius:2px;
+    font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;
+  }
+  .load-job-row button:hover{background:var(--charcoal-2);}
+
+  .line-items-table{width:100%;border-collapse:collapse;margin-bottom:10px;}
+  .line-items-table th{
+    text-align:left;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.03em;
+    color:var(--steel);padding-bottom:8px;border-bottom:1px solid var(--line);
+  }
+  .line-items-table td{padding:8px 6px 8px 0;vertical-align:top;}
+  .line-items-table input{padding:8px 10px;font-size:0.88rem;}
+  .li-desc{width:auto;}
+  .li-qty, .li-price{width:90px;}
+  .li-amount{width:100px;text-align:right;font-weight:600;padding-top:14px;}
+  .li-remove{width:36px;text-align:center;}
+  .li-remove button{
+    background:transparent;border:1px solid var(--line);color:var(--green);width:30px;height:30px;
+    border-radius:2px;cursor:pointer;font-size:0.9rem;margin-top:2px;
+  }
+  .li-remove button:hover{background:var(--green);color:#fff;}
+
+  .add-line-btn{
+    background:transparent;border:1px dashed var(--line);color:var(--steel);
+    padding:9px 16px;border-radius:2px;font-weight:600;font-size:0.85rem;cursor:pointer;
+    font-family:inherit;margin-bottom:24px;
+  }
+  .add-line-btn:hover{border-color:var(--green);color:var(--green);}
+
+  .totals-box{max-width:320px;margin-left:auto;margin-bottom:24px;}
+  .totals-box .row{display:flex;justify-content:space-between;padding:6px 0;font-size:0.92rem;}
+  .totals-box .row.total{border-top:2px solid var(--charcoal);margin-top:6px;padding-top:12px;font-weight:700;font-size:1.1rem;}
+  .totals-box input{width:90px;text-align:right;padding:6px 8px;}
+
+  .save-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+  .btn-save{background:var(--green);color:#fff;border:none;padding:12px 24px;border-radius:2px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .btn-save:hover{background:var(--green-bright);}
+  .btn-clear{background:transparent;border:1px solid var(--line);color:var(--steel);padding:12px 20px;border-radius:2px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .btn-clear:hover{background:var(--paper);}
+  #saveStatus{font-size:0.88rem;color:var(--steel);}
+
+  .invoice-list-card{
+    background:#fff;border:1px solid var(--line);border-radius:3px;padding:16px 20px;
+    margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
+  }
+  .invoice-list-card .info{display:flex;flex-direction:column;gap:2px;}
+  .invoice-list-card .num{font-weight:700;}
+  .invoice-list-card .sub{font-size:0.85rem;color:var(--steel);}
+  .invoice-list-card .amount{font-weight:700;font-size:1.05rem;}
+  .invoice-list-card .actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .invoice-list-card button, .invoice-list-card a{
+    border:none;border-radius:2px;padding:8px 14px;font-weight:700;font-size:0.8rem;
+    cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block;
+  }
+  .btn-edit{background:var(--charcoal);color:#fff;}
+  .btn-edit:hover{background:var(--charcoal-2);}
+  .btn-view{background:transparent;border:1px solid var(--line) !important;color:var(--charcoal);}
+  .btn-view:hover{background:var(--paper);}
+  .btn-paid{background:#227a3f;color:#fff;}
+  .btn-paid:hover{background:#1c6534;}
+  .btn-del{background:transparent;border:1px solid var(--green) !important;color:var(--green);}
+  .btn-del:hover{background:var(--green);color:#fff;}
+  .status-tag{font-size:0.68rem;font-weight:700;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:0.03em;}
+  .status-draft{background:#e9e8e4;color:var(--steel);}
+  .status-sent{background:#dfe9ff;color:#1e4fa3;}
+  .status-paid{background:#dff5e3;color:#227a3f;}
+</style>
+</head>
+<body>
+  <header>
+    <h1>Kimble Solutions — Invoices</h1>
+    <div class="actions">
+      <a href="/admin/dashboard.html">Back to Dashboard</a>
+      <button id="logoutBtn">Log Out</button>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2 id="formHeading">Create Invoice</h2>
+      <div class="card">
+        <div class="load-job-row">
+          <div>
+            <label for="loadJobSelect">Load customer info from a recent job (optional)</label>
+            <select id="loadJobSelect">
+              <option value="">— Select a job —</option>
+            </select>
+          </div>
+          <button type="button" id="loadJobBtn">Load</button>
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label for="inv-name">Customer name</label>
+            <input id="inv-name" type="text" required>
+          </div>
+          <div>
+            <label for="inv-phone">Phone</label>
+            <input id="inv-phone" type="tel">
+          </div>
+        </div>
+        <div class="field-row">
+          <div>
+            <label for="inv-email">Email</label>
+            <input id="inv-email" type="email">
+          </div>
+          <div>
+            <label for="inv-address">Address</label>
+            <input id="inv-address" type="text">
+          </div>
+        </div>
+
+        <label>Line items</label>
+        <table class="line-items-table">
+          <thead>
+            <tr>
+              <th class="li-desc">Description</th>
+              <th class="li-qty">Qty</th>
+              <th class="li-price">Unit Price</th>
+              <th class="li-amount">Amount</th>
+              <th class="li-remove"></th>
+            </tr>
+          </thead>
+          <tbody id="lineItemsBody"></tbody>
+        </table>
+        <button type="button" class="add-line-btn" id="addLineBtn">+ Add Line Item</button>
+
+        <div class="field-row full">
+          <div>
+            <label for="inv-notes">Notes (shown on the invoice — payment terms, thank-you note, etc.)</label>
+            <textarea id="inv-notes" placeholder="Thanks for choosing Kimble Solutions! Payment due within 15 days."></textarea>
+          </div>
+        </div>
+
+        <div class="totals-box">
+          <div class="row"><span>Subtotal</span><span id="subtotalDisplay">$0.00</span></div>
+          <div class="row"><span>Discount ($)</span><input id="inv-discount" type="number" min="0" step="0.01" value="0"></div>
+          <div class="row"><span>Tax rate (%)</span><input id="inv-tax-rate" type="number" min="0" step="0.01" value="0"></div>
+          <div class="row total"><span>Total</span><span id="totalDisplay">$0.00</span></div>
+        </div>
+
+        <div class="save-row">
+          <button type="button" class="btn-save" id="saveInvoiceBtn">Save Invoice</button>
+          <button type="button" class="btn-clear" id="clearFormBtn">Clear / New Invoice</button>
+          <span id="saveStatus"></span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Past Invoices</h2>
+      <div id="invoicesList" class="empty">Loading...</div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/supabase-config.js"></script>
+  <script>
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    (async function guard() {
+      const { data } = await supabaseClient.auth.getSession();
+      if (!data.session) { window.location.href = '/admin'; return; }
+      loadRecentJobs();
+      addLineItem();
+      loadInvoices();
+
+      const params = new URLSearchParams(window.location.search);
+      const editId = params.get('edit');
+      const bookingId = params.get('bookingId');
+      if (editId) loadInvoiceForEdit(editId);
+      else if (bookingId) loadJobIntoForm(bookingId);
+    })();
+
+    document.getElementById('logoutBtn').addEventListener('click', async function () {
+      try { await supabaseClient.auth.signOut(); } catch (err) { console.error(err); }
+      window.location.href = '/admin';
+    });
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str || '';
+      return div.innerHTML;
+    }
+    function money(n) {
+      return '$' + (Math.round((n + Number.EPSILON) * 100) / 100).toFixed(2);
+    }
+
+    let editingInvoiceId = null;
+
+    // ---- Load a recent job to prefill customer info ----
+    async function loadRecentJobs() {
+      const sel = document.getElementById('loadJobSelect');
+      const { data, error } = await supabaseClient
+        .from('bookings')
+        .select('*')
+        .order('booking_date', { ascending: false })
+        .limit(50);
+      if (error || !data) return;
+      data.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b.id;
+        opt.textContent = `${b.booking_date} — ${b.name}${b.service ? ' (' + b.service + ')' : ''}`;
+        sel.appendChild(opt);
+      });
+    }
+
+    async function loadJobIntoForm(bookingId) {
+      const { data, error } = await supabaseClient.from('bookings').select('*').eq('id', bookingId).single();
+      if (error || !data) return;
+      document.getElementById('inv-name').value = data.name || '';
+      document.getElementById('inv-phone').value = data.phone || '';
+      document.getElementById('inv-email').value = data.email || '';
+      document.getElementById('inv-address').value = data.address || '';
+      document.getElementById('loadJobSelect').value = bookingId;
+      if (data.service && document.getElementById('lineItemsBody').children.length <= 1) {
+        const rows = document.querySelectorAll('.li-desc-input');
+        if (rows.length && !rows[0].value) rows[0].value = data.service;
+        recalcTotals();
+      }
+    }
+
+    document.getElementById('loadJobBtn').addEventListener('click', function () {
+      const id = document.getElementById('loadJobSelect').value;
+      if (id) loadJobIntoForm(id);
+    });
+
+    // ---- Line items ----
+    function addLineItem(desc, qty, price) {
+      const tbody = document.getElementById('lineItemsBody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="li-desc"><input type="text" class="li-desc-input" placeholder="Furniture removal, appliance pickup, etc." value="${escapeHtml(desc || '')}"></td>
+        <td class="li-qty"><input type="number" class="li-qty-input" min="0" step="1" value="${qty != null ? qty : 1}"></td>
+        <td class="li-price"><input type="number" class="li-price-input" min="0" step="0.01" value="${price != null ? price : 0}"></td>
+        <td class="li-amount"><span class="li-amount-display">$0.00</span></td>
+        <td class="li-remove"><button type="button" class="li-remove-btn" title="Remove">&times;</button></td>
+      `;
+      tbody.appendChild(tr);
+
+      tr.querySelector('.li-qty-input').addEventListener('input', recalcTotals);
+      tr.querySelector('.li-price-input').addEventListener('input', recalcTotals);
+      tr.querySelector('.li-remove-btn').addEventListener('click', function () {
+        tr.remove();
+        recalcTotals();
+      });
+      recalcTotals();
+    }
+
+    document.getElementById('addLineBtn').addEventListener('click', function () { addLineItem(); });
+    document.getElementById('inv-discount').addEventListener('input', recalcTotals);
+    document.getElementById('inv-tax-rate').addEventListener('input', recalcTotals);
+
+    function getLineItems() {
+      const rows = document.querySelectorAll('#lineItemsBody tr');
+      return Array.from(rows).map(tr => {
+        const description = tr.querySelector('.li-desc-input').value.trim();
+        const quantity = parseFloat(tr.querySelector('.li-qty-input').value) || 0;
+        const unit_price = parseFloat(tr.querySelector('.li-price-input').value) || 0;
+        return { description, quantity, unit_price };
+      }).filter(li => li.description || li.quantity || li.unit_price);
+    }
+
+    function recalcTotals() {
+      const rows = document.querySelectorAll('#lineItemsBody tr');
+      let subtotal = 0;
+      rows.forEach(tr => {
+        const qty = parseFloat(tr.querySelector('.li-qty-input').value) || 0;
+        const price = parseFloat(tr.querySelector('.li-price-input').value) || 0;
+        const amount = qty * price;
+        tr.querySelector('.li-amount-display').textContent = money(amount);
+        subtotal += amount;
+      });
+      const discount = parseFloat(document.getElementById('inv-discount').value) || 0;
+      const taxRate = parseFloat(document.getElementById('inv-tax-rate').value) || 0;
+      const taxable = Math.max(subtotal - discount, 0);
+      const tax = taxable * (taxRate / 100);
+      const total = taxable + tax;
+
+      document.getElementById('subtotalDisplay').textContent = money(subtotal);
+      document.getElementById('totalDisplay').textContent = money(total);
+    }
+
+    // ---- Save ----
+    document.getElementById('saveInvoiceBtn').addEventListener('click', async function () {
+      const name = document.getElementById('inv-name').value.trim();
+      if (!name) { alert('Customer name is required.'); return; }
+
+      const payload = {
+        customer_name: name,
+        customer_phone: document.getElementById('inv-phone').value.trim(),
+        customer_email: document.getElementById('inv-email').value.trim(),
+        customer_address: document.getElementById('inv-address').value.trim(),
+        line_items: getLineItems(),
+        notes: document.getElementById('inv-notes').value.trim(),
+        discount: parseFloat(document.getElementById('inv-discount').value) || 0,
+        tax_rate: parseFloat(document.getElementById('inv-tax-rate').value) || 0,
+        updated_at: new Date().toISOString()
+      };
+      const bookingSel = document.getElementById('loadJobSelect').value;
+      if (bookingSel) payload.booking_id = bookingSel;
+
+      const statusEl = document.getElementById('saveStatus');
+      statusEl.textContent = 'Saving...';
+
+      let result;
+      if (editingInvoiceId) {
+        result = await supabaseClient.from('invoices').update(payload).eq('id', editingInvoiceId).select().single();
+      } else {
+        result = await supabaseClient.from('invoices').insert([payload]).select().single();
+      }
+
+      if (result.error) { statusEl.textContent = 'Could not save: ' + result.error.message; return; }
+
+      editingInvoiceId = result.data.id;
+      statusEl.textContent = 'Saved as ' + result.data.invoice_number + '!';
+      document.getElementById('formHeading').textContent = 'Editing ' + result.data.invoice_number;
+      loadInvoices();
+    });
+
+    document.getElementById('clearFormBtn').addEventListener('click', function () {
+      editingInvoiceId = null;
+      document.getElementById('formHeading').textContent = 'Create Invoice';
+      document.getElementById('inv-name').value = '';
+      document.getElementById('inv-phone').value = '';
+      document.getElementById('inv-email').value = '';
+      document.getElementById('inv-address').value = '';
+      document.getElementById('inv-notes').value = '';
+      document.getElementById('inv-discount').value = 0;
+      document.getElementById('inv-tax-rate').value = 0;
+      document.getElementById('loadJobSelect').value = '';
+      document.getElementById('lineItemsBody').innerHTML = '';
+      addLineItem();
+      document.getElementById('saveStatus').textContent = '';
+      window.history.replaceState({}, '', '/admin/invoices.html');
+    });
+
+    // ---- Load existing invoice for editing ----
+    async function loadInvoiceForEdit(id) {
+      const { data, error } = await supabaseClient.from('invoices').select('*').eq('id', id).single();
+      if (error || !data) return;
+      editingInvoiceId = data.id;
+      document.getElementById('formHeading').textContent = 'Editing ' + data.invoice_number;
+      document.getElementById('inv-name').value = data.customer_name || '';
+      document.getElementById('inv-phone').value = data.customer_phone || '';
+      document.getElementById('inv-email').value = data.customer_email || '';
+      document.getElementById('inv-address').value = data.customer_address || '';
+      document.getElementById('inv-notes').value = data.notes || '';
+      document.getElementById('inv-discount').value = data.discount || 0;
+      document.getElementById('inv-tax-rate').value = data.tax_rate || 0;
+      if (data.booking_id) document.getElementById('loadJobSelect').value = data.booking_id;
+
+      document.getElementById('lineItemsBody').innerHTML = '';
+      const items = Array.isArray(data.line_items) ? data.line_items : [];
+      if (items.length === 0) addLineItem();
+      else items.forEach(li => addLineItem(li.description, li.quantity, li.unit_price));
+      recalcTotals();
+    }
+
+    // ---- Past invoices list ----
+    async function loadInvoices() {
+      const list = document.getElementById('invoicesList');
+      const { data, error } = await supabaseClient.from('invoices').select('*').order('created_at', { ascending: false });
+      if (error) { list.textContent = 'Could not load invoices.'; return; }
+      if (!data || data.length === 0) { list.innerHTML = '<p class="empty">No invoices yet.</p>'; return; }
+
+      list.innerHTML = '';
+      data.forEach(inv => {
+        const items = Array.isArray(inv.line_items) ? inv.line_items : [];
+        const subtotal = items.reduce((sum, li) => sum + (li.quantity * li.unit_price), 0);
+        const taxable = Math.max(subtotal - (inv.discount || 0), 0);
+        const total = taxable + taxable * ((inv.tax_rate || 0) / 100);
+
+        const card = document.createElement('div');
+        card.className = 'invoice-list-card';
+        card.innerHTML = `
+          <div class="info">
+            <span class="num">${inv.invoice_number} <span class="status-tag status-${inv.status}">${inv.status}</span></span>
+            <span class="sub"></span>
+          </div>
+          <div class="amount">${money(total)}</div>
+          <div class="actions">
+            <a class="btn-view" href="/admin/invoice-print.html?id=${inv.id}" target="_blank">View / Print</a>
+            <button class="btn-edit" data-id="${inv.id}">Edit</button>
+            ${inv.status !== 'paid' ? `<button class="btn-paid" data-id="${inv.id}">Mark Paid</button>` : ''}
+            <button class="btn-del" data-id="${inv.id}">Delete</button>
+          </div>
+        `;
+        card.querySelector('.sub').textContent = escapeHtml(inv.customer_name) + ' · ' + new Date(inv.created_at).toLocaleDateString();
+        list.appendChild(card);
+      });
+
+      list.querySelectorAll('.btn-edit').forEach(btn => {
+        btn.addEventListener('click', function () {
+          window.history.replaceState({}, '', '/admin/invoices.html?edit=' + this.dataset.id);
+          loadInvoiceForEdit(this.dataset.id);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
+      list.querySelectorAll('.btn-paid').forEach(btn => {
+        btn.addEventListener('click', async function () {
+          await supabaseClient.from('invoices').update({ status: 'paid' }).eq('id', this.dataset.id);
+          loadInvoices();
+        });
+      });
+      list.querySelectorAll('.btn-del').forEach(btn => {
+        btn.addEventListener('click', async function () {
+          if (!confirm('Delete this invoice permanently?')) return;
+          await supabaseClient.from('invoices').delete().eq('id', this.dataset.id);
+          loadInvoices();
+        });
+      });
+    }
+  </script>
+</body>
+</html>

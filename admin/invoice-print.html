@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Invoice | Kimble Solutions</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--charcoal:#18181b;--green:#183B35;--steel:#5a5a61;--line:#dedcd5;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Work Sans',sans-serif;background:#e9e8e4;color:var(--charcoal);}
+  h1,h2{font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;}
+
+  .toolbar{
+    position:sticky;top:0;background:var(--charcoal);padding:14px 24px;display:flex;
+    justify-content:space-between;align-items:center;z-index:10;
+  }
+  .toolbar a, .toolbar button{
+    background:transparent;border:1px solid #45454b;color:#fff;padding:9px 16px;border-radius:2px;
+    cursor:pointer;font-family:inherit;font-weight:600;font-size:0.9rem;text-decoration:none;
+  }
+  .toolbar button.primary{background:var(--green);border-color:var(--green);}
+  .toolbar .right{display:flex;gap:10px;}
+
+  .sheet{
+    max-width:800px;margin:32px auto;background:#fff;padding:56px;
+    box-shadow:0 2px 12px rgba(0,0,0,0.08);
+  }
+  .sheet-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:40px;flex-wrap:wrap;gap:20px;}
+  .sheet-header .brand{display:flex;align-items:center;gap:12px;}
+  .sheet-header .brand img{height:64px;width:auto;}
+  .sheet-header .brand-text{font-family:'Anton',sans-serif;font-size:1rem;text-transform:uppercase;line-height:1.1;}
+  .sheet-header .brand-text span{display:block;color:var(--green);font-size:0.82rem;}
+  .sheet-header .invoice-meta{text-align:right;}
+  .sheet-header .invoice-meta h1{font-size:1.8rem;color:var(--charcoal);margin-bottom:6px;}
+  .sheet-header .invoice-meta div{font-size:0.9rem;color:var(--steel);}
+
+  .bill-to{margin-bottom:36px;}
+  .bill-to .label{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--green);margin-bottom:8px;}
+  .bill-to div{font-size:0.95rem;line-height:1.6;}
+
+  table{width:100%;border-collapse:collapse;margin-bottom:30px;}
+  thead th{
+    text-align:left;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.03em;
+    color:var(--steel);padding-bottom:10px;border-bottom:2px solid var(--charcoal);
+  }
+  thead th.num{text-align:right;}
+  tbody td{padding:12px 0;border-bottom:1px solid var(--line);font-size:0.95rem;}
+  tbody td.num{text-align:right;}
+
+  .totals{max-width:280px;margin-left:auto;}
+  .totals .row{display:flex;justify-content:space-between;padding:6px 0;font-size:0.95rem;}
+  .totals .row.total{border-top:2px solid var(--charcoal);margin-top:8px;padding-top:14px;font-weight:700;font-size:1.25rem;}
+
+  .notes{margin-top:40px;padding-top:24px;border-top:1px solid var(--line);}
+  .notes .label{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--green);margin-bottom:8px;}
+  .notes div{font-size:0.92rem;color:var(--charcoal);white-space:pre-wrap;line-height:1.6;}
+
+  .loading{text-align:center;padding:80px 24px;color:var(--steel);}
+
+  @media print {
+    .toolbar{display:none;}
+    body{background:#fff;}
+    .sheet{box-shadow:none;margin:0;max-width:none;padding:0;}
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <a href="/admin/invoices.html">&larr; Back to Invoices</a>
+  <div class="right">
+    <button class="primary" onclick="window.print()">Print / Save as PDF</button>
+  </div>
+</div>
+
+<div id="loadingMsg" class="loading">Loading invoice...</div>
+
+<div class="sheet" id="sheet" style="display:none;">
+  <div class="sheet-header">
+    <div class="brand">
+      <img src="/logo.png" alt="Kimble Solutions logo">
+    </div>
+    <div class="invoice-meta">
+      <h1>Invoice</h1>
+      <div id="invNumber"></div>
+      <div id="invDate"></div>
+    </div>
+  </div>
+
+  <div class="bill-to">
+    <div class="label">Bill To</div>
+    <div id="billToName"></div>
+    <div id="billToAddress"></div>
+    <div id="billToPhone"></div>
+    <div id="billToEmail"></div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th class="num">Qty</th>
+        <th class="num">Unit Price</th>
+        <th class="num">Amount</th>
+      </tr>
+    </thead>
+    <tbody id="lineItemsRows"></tbody>
+  </table>
+
+  <div class="totals">
+    <div class="row"><span>Subtotal</span><span id="totSubtotal"></span></div>
+    <div class="row" id="discountRow" style="display:none;"><span>Discount</span><span id="totDiscount"></span></div>
+    <div class="row" id="taxRow" style="display:none;"><span>Tax</span><span id="totTax"></span></div>
+    <div class="row total"><span>Total</span><span id="totTotal"></span></div>
+  </div>
+
+  <div class="notes" id="notesWrap" style="display:none;">
+    <div class="label">Notes</div>
+    <div id="notesText"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/js/supabase-config.js"></script>
+<script>
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  function money(n) {
+    return '$' + (Math.round((n + Number.EPSILON) * 100) / 100).toFixed(2);
+  }
+
+  (async function guard() {
+    const { data } = await supabaseClient.auth.getSession();
+    if (!data.session) { window.location.href = '/admin'; return; }
+    loadInvoice();
+  })();
+
+  async function loadInvoice() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    if (!id) { document.getElementById('loadingMsg').textContent = 'No invoice specified.'; return; }
+
+    const { data, error } = await supabaseClient.from('invoices').select('*').eq('id', id).single();
+    if (error || !data) { document.getElementById('loadingMsg').textContent = 'Could not load that invoice.'; return; }
+
+    document.getElementById('invNumber').textContent = data.invoice_number;
+    document.getElementById('invDate').textContent = new Date(data.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    document.getElementById('billToName').textContent = data.customer_name || '';
+    document.getElementById('billToAddress').textContent = data.customer_address || '';
+    document.getElementById('billToPhone').textContent = data.customer_phone || '';
+    document.getElementById('billToEmail').textContent = data.customer_email || '';
+
+    const items = Array.isArray(data.line_items) ? data.line_items : [];
+    const rowsEl = document.getElementById('lineItemsRows');
+    rowsEl.innerHTML = '';
+    let subtotal = 0;
+    items.forEach(li => {
+      const amount = (li.quantity || 0) * (li.unit_price || 0);
+      subtotal += amount;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td></td><td class="num"></td><td class="num"></td><td class="num"></td>`;
+      tr.children[0].textContent = li.description || '';
+      tr.children[1].textContent = li.quantity;
+      tr.children[2].textContent = money(li.unit_price || 0);
+      tr.children[3].textContent = money(amount);
+      rowsEl.appendChild(tr);
+    });
+
+    const discount = data.discount || 0;
+    const taxRate = data.tax_rate || 0;
+    const taxable = Math.max(subtotal - discount, 0);
+    const tax = taxable * (taxRate / 100);
+    const total = taxable + tax;
+
+    document.getElementById('totSubtotal').textContent = money(subtotal);
+    if (discount > 0) {
+      document.getElementById('discountRow').style.display = 'flex';
+      document.getElementById('totDiscount').textContent = '-' + money(discount);
+    }
+    if (taxRate > 0) {
+      document.getElementById('taxRow').style.display = 'flex';
+      document.getElementById('totTax').textContent = money(tax) + ' (' + taxRate + '%)';
+    }
+    document.getElementById('totTotal').textContent = money(total);
+
+    if (data.notes) {
+      document.getElementById('notesWrap').style.display = 'block';
+      document.getElementById('notesText').textContent = data.notes;
+    }
+
+    document.getElementById('loadingMsg').style.display = 'none';
+    document.getElementById('sheet').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>

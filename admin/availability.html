@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Availability & Bookings | Kimble Solutions</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--charcoal:#18181b;--charcoal-2:#232327;--green:#183B35;--green-bright:#2f7a6b;--paper:#f4f3ef;--steel:#5a5a61;--line:#dedcd5;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Work Sans',sans-serif;background:var(--paper);color:var(--charcoal);}
+  header{background:var(--charcoal);color:#fff;padding:18px 28px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10;flex-wrap:wrap;gap:10px;}
+  header h1{font-family:'Anton',sans-serif;text-transform:uppercase;font-size:1.1rem;letter-spacing:0.02em;}
+  header .actions{display:flex;gap:10px;}
+  header a, header button{
+    background:transparent;border:1px solid #45454b;color:#fff;padding:9px 16px;border-radius:2px;
+    cursor:pointer;font-family:inherit;font-weight:600;font-size:0.9rem;text-decoration:none;display:inline-block;
+  }
+  header a:hover, header button:hover{background:var(--charcoal-2);}
+  main{max-width:1000px;margin:0 auto;padding:36px 24px 90px;}
+  h2{font-family:'Anton',sans-serif;text-transform:uppercase;font-size:1.25rem;margin-bottom:18px;}
+  section{margin-bottom:56px;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:3px;padding:22px;margin-bottom:16px;}
+  .empty{color:var(--steel);font-size:0.95rem;}
+
+  .block-date-form{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px;}
+  .block-date-form div{flex:1;min-width:180px;}
+  .block-date-form label{display:block;font-size:0.85rem;font-weight:600;margin-bottom:7px;}
+  .block-date-form input,
+  .block-date-form select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:2px;font-family:inherit;}
+  .block-date-form button{background:var(--green);color:#fff;border:none;padding:11px 20px;border-radius:2px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .block-date-form .whole-day-toggle{flex:0 0 100%;min-width:auto;}
+  .whole-day-toggle label.toggle{display:flex;align-items:center;gap:8px;font-size:0.9rem;font-weight:600;cursor:pointer;margin-bottom:0;}
+  .block-date-form .time-range-fields{display:flex;gap:10px;flex:0 0 100%;min-width:auto;}
+  .time-range-fields > div{flex:1;min-width:140px;}
+  .block-date-form button:hover{background:var(--green-bright);}
+
+  .link-gen-form{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+  .link-gen-form .full{grid-column:1/-1;}
+  .link-gen-form label{display:block;font-size:0.85rem;font-weight:600;margin-bottom:7px;}
+  .link-gen-form input,
+  .link-gen-form select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:2px;font-family:inherit;}
+  .link-gen-form button{
+    grid-column:1/-1;background:var(--green);color:#fff;border:none;padding:12px 20px;
+    border-radius:2px;font-weight:700;cursor:pointer;font-family:inherit;
+  }
+  .link-gen-form button:hover{background:var(--green-bright);}
+  .link-output{
+    margin-top:16px;background:var(--paper);border:1px solid var(--line);border-radius:2px;
+    padding:14px;font-size:0.88rem;word-break:break-all;display:none;
+  }
+  .link-output button{
+    margin-top:10px;background:var(--charcoal);color:#fff;border:none;padding:8px 16px;
+    border-radius:2px;font-weight:700;font-size:0.82rem;cursor:pointer;font-family:inherit;
+  }
+  .link-output button:hover{background:var(--charcoal-2);}
+
+  .weekly-hours-row{
+    display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);flex-wrap:wrap;
+  }
+  .weekly-hours-row:last-child{border-bottom:none;}
+  .weekly-hours-row .day-name{width:110px;font-weight:700;flex-shrink:0;}
+  .weekly-hours-row label.toggle{display:flex;align-items:center;gap:8px;font-size:0.88rem;cursor:pointer;}
+  .weekly-hours-row select{padding:8px 10px;border:1px solid var(--line);border-radius:2px;font-family:inherit;}
+  .weekly-hours-row .hours-fields{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .weekly-hours-row .closed-label{color:var(--steel);font-size:0.88rem;font-style:italic;}
+  #saveHoursBtn{
+    margin-top:18px;background:var(--green);color:#fff;border:none;padding:11px 22px;
+    border-radius:2px;font-weight:700;cursor:pointer;font-family:inherit;
+  }
+  #saveHoursBtn:hover{background:var(--green-bright);}
+  #hoursSaveStatus{margin-top:10px;font-size:0.85rem;color:var(--steel);}
+
+  /* ---------- Job Schedule ---------- */
+  .schedule-layout{display:grid;grid-template-columns:340px 1fr;gap:24px;align-items:start;}
+  @media (max-width:820px){.schedule-layout{grid-template-columns:1fr;}}
+  .sched-calendar-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .sched-calendar-header button{
+    background:var(--paper);border:1px solid var(--line);border-radius:2px;
+    width:32px;height:32px;cursor:pointer;font-size:1rem;
+  }
+  .sched-calendar-header span{font-family:'Anton',sans-serif;text-transform:uppercase;font-size:0.98rem;}
+  .sched-calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+  .sched-calendar-grid .dow{text-align:center;font-size:0.68rem;font-weight:700;color:var(--steel);text-transform:uppercase;padding-bottom:4px;}
+  .sched-calendar-grid .day{
+    aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    border-radius:2px;font-size:0.82rem;cursor:pointer;background:var(--paper);
+    border:1px solid var(--line);color:var(--charcoal);position:relative;gap:2px;
+  }
+  .sched-calendar-grid .day:hover{border-color:var(--green);}
+  .sched-calendar-grid .day.empty{background:transparent;border:none;cursor:default;}
+  .sched-calendar-grid .day.selected{background:var(--green);border-color:var(--green);color:#fff;}
+  .sched-calendar-grid .day .job-dots{display:flex;gap:2px;}
+  .sched-calendar-grid .day .job-dots span{width:5px;height:5px;border-radius:50%;}
+  .dot-pending{background:#c98a1f;}
+  .dot-confirmed{background:#227a3f;}
+  .dot-completed{background:#8a8a90;}
+  .day.selected .dot-pending, .day.selected .dot-confirmed, .day.selected .dot-completed{background:#fff;}
+
+  .sched-day-panel{background:#fff;border:1px solid var(--line);border-radius:3px;padding:20px;}
+  .sched-day-panel h3{
+    font-family:'Work Sans',sans-serif;font-weight:700;font-size:1.05rem;
+    text-transform:none;letter-spacing:normal;margin-bottom:14px;
+  }
+  .sched-job-card{border:1px solid var(--line);border-radius:2px;padding:14px 16px;margin-bottom:12px;}
+  .sched-job-card.completed{opacity:0.55;}
+  .sched-job-top{display:flex;justify-content:space-between;gap:10px;margin-bottom:6px;flex-wrap:wrap;}
+  .sched-job-top .name{font-weight:700;}
+  .sched-job-meta{font-size:0.85rem;color:var(--steel);margin-bottom:8px;}
+  .sched-job-actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .sched-job-actions button{border:none;border-radius:2px;padding:7px 14px;font-weight:700;font-size:0.8rem;cursor:pointer;font-family:inherit;}
+  .btn-complete{background:#227a3f;color:#fff;}
+  .btn-complete:hover{background:#1c6534;}
+  .btn-undo{background:transparent;border:1px solid var(--line) !important;color:var(--steel);}
+  .btn-undo:hover{background:var(--paper);}
+  .empty-day{color:var(--steel);font-size:0.9rem;margin-bottom:16px;}
+
+  .add-job-btn{
+    background:var(--charcoal);color:#fff;border:none;padding:10px 18px;border-radius:2px;
+    font-weight:700;font-size:0.85rem;cursor:pointer;font-family:inherit;margin-bottom:16px;
+  }
+  .add-job-btn:hover{background:var(--charcoal-2);}
+  .add-job-form{background:var(--paper);border:1px solid var(--line);border-radius:2px;padding:16px;margin-bottom:16px;display:none;}
+  .add-job-form.open{display:block;}
+  .add-job-form label{display:block;font-size:0.82rem;font-weight:600;margin-bottom:6px;}
+  .add-job-form input,
+  .add-job-form select,
+  .add-job-form textarea{
+    width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:2px;
+    font-family:inherit;font-size:0.9rem;margin-bottom:12px;
+  }
+  .add-job-form textarea{resize:vertical;min-height:60px;}
+  .add-job-form button[type="submit"]{
+    background:var(--green);color:#fff;border:none;padding:10px 20px;border-radius:2px;
+    font-weight:700;cursor:pointer;font-family:inherit;
+  }
+  .add-job-form button[type="submit"]:hover{background:var(--green-bright);}
+
+  .blocked-list{display:flex;flex-wrap:wrap;gap:10px;}
+  .blocked-chip{
+    background:#fff;border:1px solid var(--line);border-radius:20px;padding:8px 10px 8px 16px;
+    display:flex;align-items:center;gap:10px;font-size:0.88rem;
+  }
+  .blocked-chip button{
+    background:var(--green);color:#fff;border:none;width:22px;height:22px;border-radius:50%;
+    cursor:pointer;font-size:0.8rem;line-height:1;
+  }
+
+  .booking-card-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px;}
+  .booking-card-top .name{font-weight:700;font-size:1.05rem;}
+  .booking-card-top .when{color:var(--steel);font-size:0.85rem;}
+  .booking-meta{display:flex;flex-wrap:wrap;gap:16px;color:var(--steel);font-size:0.9rem;margin-bottom:10px;}
+  .booking-meta strong{color:var(--charcoal);}
+  .booking-notes{font-size:0.92rem;color:var(--charcoal);margin-bottom:14px;}
+  .booking-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .booking-actions button{border:none;border-radius:2px;padding:8px 16px;font-weight:700;font-size:0.85rem;cursor:pointer;font-family:inherit;}
+  .btn-confirm{background:#227a3f;color:#fff;}
+  .btn-confirm:hover{background:#1c6534;}
+  .btn-decline{background:#8a6100;color:#fff;}
+  .btn-decline:hover{background:#6f4e00;}
+  .btn-delete{background:transparent;color:var(--green);border:1px solid var(--green) !important;}
+  .btn-delete:hover{background:var(--green);color:#fff;}
+  .status-tag{font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.03em;}
+  .status-pending{background:#fff3d6;color:#8a6100;}
+  .status-confirmed{background:#dff5e3;color:#227a3f;}
+  .status-declined{background:#e9e8e4;color:var(--steel);}
+</style>
+</head>
+<body>
+  <header>
+    <h1>Kimble Solutions — Availability &amp; Bookings</h1>
+    <div class="actions">
+      <a href="/admin/dashboard.html">Back to Dashboard</a>
+      <a href="/admin/invoices.html">Invoices</a>
+      <button id="logoutBtn">Log Out</button>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Weekly Hours</h2>
+      <div class="card">
+        <p style="color:var(--steel);font-size:0.9rem;margin-bottom:6px;">Turn days on or off and set your working hours. This controls what customers can pick on the booking calendar.</p>
+        <div id="weeklyHoursGrid"></div>
+        <button id="saveHoursBtn">Save Hours</button>
+        <p id="hoursSaveStatus"></p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Job Schedule</h2>
+      <div class="schedule-layout">
+        <div>
+          <div class="sched-calendar-header">
+            <button type="button" id="schedPrev" aria-label="Previous month">&larr;</button>
+            <span id="schedMonthLabel"></span>
+            <button type="button" id="schedNext" aria-label="Next month">&rarr;</button>
+          </div>
+          <div class="sched-calendar-grid" id="schedCalendarGrid"></div>
+        </div>
+        <div class="sched-day-panel">
+          <h3 id="schedDayLabel">Select a date</h3>
+          <button class="add-job-btn" id="addJobToggleBtn" style="display:none;">+ Add a Job</button>
+          <form class="add-job-form" id="addJobForm">
+            <label for="aj-name">Name</label>
+            <input id="aj-name" type="text" required>
+            <label for="aj-phone">Phone</label>
+            <input id="aj-phone" type="tel" required>
+            <label for="aj-address">Address</label>
+            <input id="aj-address" type="text">
+            <label for="aj-time">Time</label>
+            <select id="aj-time" required></select>
+            <label for="aj-duration">Estimated duration</label>
+            <select id="aj-duration"></select>
+            <label for="aj-service">Service</label>
+            <select id="aj-service">
+              <option value="">Not specified</option>
+              <option>Junk Removal</option>
+              <option>Construction Debris Hauling</option>
+              <option>Brush &amp; Small Tree Removal</option>
+              <option>Aggregate Material Delivery/Removal</option>
+            </select>
+            <label for="aj-notes">Notes</label>
+            <textarea id="aj-notes"></textarea>
+            <button type="submit">Add to Schedule</button>
+          </form>
+          <div id="schedDayJobs"></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Create a Booking Link</h2>
+      <div class="card">
+        <p style="color:var(--steel);font-size:0.9rem;margin-bottom:18px;">For customers who called in instead of using the online quote form — fill in what you've got and generate a link to text or email them.</p>
+        <form class="link-gen-form" id="linkGenForm">
+          <div>
+            <label for="lg-name">Name</label>
+            <input id="lg-name" type="text" placeholder="Jane Smith">
+          </div>
+          <div>
+            <label for="lg-phone">Phone</label>
+            <input id="lg-phone" type="tel" placeholder="(804) 555-0123">
+          </div>
+          <div class="full">
+            <label for="lg-email">Email (optional)</label>
+            <input id="lg-email" type="email" placeholder="jane@email.com">
+          </div>
+          <div class="full">
+            <label for="lg-service">Service (optional)</label>
+            <select id="lg-service">
+              <option value="">Not specified</option>
+              <option>Junk Removal</option>
+              <option>Construction Debris Hauling</option>
+              <option>Brush &amp; Small Tree Removal</option>
+              <option>Aggregate Material Delivery/Removal</option>
+            </select>
+          </div>
+          <button type="submit">Generate Link</button>
+        </form>
+        <div class="link-output" id="linkOutput">
+          <div id="linkText"></div>
+          <button type="button" id="copyLinkBtn">Copy Link</button>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Block a Date or Time</h2>
+      <div class="card">
+        <form class="block-date-form" id="blockDateForm">
+          <div>
+            <label for="blockDate">Date</label>
+            <input id="blockDate" type="date" required>
+          </div>
+          <div class="whole-day-toggle">
+            <label class="toggle">
+              <input type="checkbox" id="blockWholeDay" checked>
+              Block the whole day
+            </label>
+          </div>
+          <div class="time-range-fields" id="timeRangeFields" style="display:none;">
+            <div>
+              <label for="blockFromTime">From</label>
+              <select id="blockFromTime"></select>
+            </div>
+            <div>
+              <label for="blockToTime">To</label>
+              <select id="blockToTime"></select>
+            </div>
+          </div>
+          <div>
+            <label for="blockReason">Reason (optional)</label>
+            <input id="blockReason" type="text" placeholder="Day off, holiday, etc.">
+          </div>
+          <button type="submit">Block This</button>
+        </form>
+        <div class="blocked-list" id="blockedList"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Booking Requests</h2>
+      <div id="bookingsList" class="empty">Loading...</div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/supabase-config.js"></script>
+  <script>
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    (async function guard() {
+      const { data } = await supabaseClient.auth.getSession();
+      if (!data.session) { window.location.href = '/admin'; return; }
+      loadWeeklyHours();
+      loadBlockedDates();
+      loadBookings();
+      initJobSchedule();
+    })();
+
+    document.getElementById('logoutBtn').addEventListener('click', async function () {
+      try { await supabaseClient.auth.signOut(); } catch (err) { console.error(err); }
+      window.location.href = '/admin';
+    });
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str || '';
+      return div.innerHTML;
+    }
+
+    // ---- Weekly Hours ----
+    const DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const HOUR_OPTIONS = ['6:00 AM','7:00 AM','8:00 AM','9:00 AM','10:00 AM','11:00 AM','12:00 PM','1:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM','6:00 PM','7:00 PM'];
+    const DURATION_OPTIONS = [1, 2, 3, 4, 5, 6];
+
+    async function loadWeeklyHours() {
+      const grid = document.getElementById('weeklyHoursGrid');
+      const { data, error } = await supabaseClient.from('weekly_hours').select('*').order('day_of_week');
+      if (error || !data) { grid.innerHTML = '<p style="color:var(--steel);">Could not load weekly hours.</p>'; return; }
+
+      const byDay = {};
+      data.forEach(row => { byDay[row.day_of_week] = row; });
+
+      grid.innerHTML = '';
+      for (let dow = 0; dow < 7; dow++) {
+        const row = byDay[dow] || { is_open: dow !== 0, start_time: '8:00 AM', end_time: '4:00 PM' };
+        const el = document.createElement('div');
+        el.className = 'weekly-hours-row';
+        el.dataset.dow = dow;
+        el.innerHTML = `
+          <span class="day-name">${DAY_NAMES[dow]}</span>
+          <label class="toggle">
+            <input type="checkbox" class="dayOpenToggle" ${row.is_open ? 'checked' : ''}>
+            Open
+          </label>
+          <div class="hours-fields" style="${row.is_open ? '' : 'display:none;'}">
+            <select class="startTimeSelect"></select>
+            <span>to</span>
+            <select class="endTimeSelect"></select>
+          </div>
+          <span class="closed-label" style="${row.is_open ? 'display:none;' : ''}">Closed</span>
+        `;
+        const startSel = el.querySelector('.startTimeSelect');
+        const endSel = el.querySelector('.endTimeSelect');
+        HOUR_OPTIONS.forEach(h => {
+          startSel.innerHTML += `<option value="${h}" ${h === row.start_time ? 'selected' : ''}>${h}</option>`;
+          endSel.innerHTML += `<option value="${h}" ${h === row.end_time ? 'selected' : ''}>${h}</option>`;
+        });
+
+        el.querySelector('.dayOpenToggle').addEventListener('change', function () {
+          el.querySelector('.hours-fields').style.display = this.checked ? '' : 'none';
+          el.querySelector('.closed-label').style.display = this.checked ? 'none' : '';
+        });
+
+        grid.appendChild(el);
+      }
+    }
+
+    document.getElementById('saveHoursBtn').addEventListener('click', async function () {
+      const statusEl = document.getElementById('hoursSaveStatus');
+      const btn = this;
+      btn.disabled = true;
+      statusEl.textContent = 'Saving...';
+
+      const rows = [];
+      document.querySelectorAll('.weekly-hours-row').forEach(el => {
+        rows.push({
+          day_of_week: parseInt(el.dataset.dow, 10),
+          is_open: el.querySelector('.dayOpenToggle').checked,
+          start_time: el.querySelector('.startTimeSelect').value,
+          end_time: el.querySelector('.endTimeSelect').value
+        });
+      });
+
+      const { error } = await supabaseClient.from('weekly_hours').upsert(rows, { onConflict: 'day_of_week' });
+      btn.disabled = false;
+      statusEl.textContent = error ? 'Could not save: ' + error.message : 'Saved!';
+      if (!error) setTimeout(() => { statusEl.textContent = ''; }, 2000);
+    });
+
+    function formatDateStr(dStr) {
+      const [y, m, d] = dStr.split('-').map(Number);
+      return new Date(y, m - 1, d).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    document.getElementById('linkGenForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = document.getElementById('lg-name').value.trim();
+      const phone = document.getElementById('lg-phone').value.trim();
+      const email = document.getElementById('lg-email').value.trim();
+      const service = document.getElementById('lg-service').value;
+
+      const url = new URL(window.location.origin + '/book.html');
+      if (name) url.searchParams.set('name', name);
+      if (phone) url.searchParams.set('phone', phone);
+      if (email) url.searchParams.set('email', email);
+      if (service) url.searchParams.set('service', service);
+      const finalUrl = url.toString();
+
+      const output = document.getElementById('linkOutput');
+      const textEl = document.getElementById('linkText');
+      textEl.textContent = finalUrl;
+      output.style.display = 'block';
+
+      document.getElementById('copyLinkBtn').onclick = async function () {
+        try {
+          await navigator.clipboard.writeText(finalUrl);
+          this.textContent = 'Copied!';
+          setTimeout(() => { this.textContent = 'Copy Link'; }, 1500);
+        } catch (err) {
+          prompt('Copy this link:', finalUrl);
+        }
+      };
+    });
+
+    // ---- Block a Date or Time ----
+    (function populateBlockTimeOptions() {
+      const fromSel = document.getElementById('blockFromTime');
+      const toSel = document.getElementById('blockToTime');
+      HOUR_OPTIONS.forEach(h => {
+        fromSel.innerHTML += `<option value="${h}">${h}</option>`;
+        toSel.innerHTML += `<option value="${h}">${h}</option>`;
+      });
+    })();
+
+    document.getElementById('blockWholeDay').addEventListener('change', function () {
+      document.getElementById('timeRangeFields').style.display = this.checked ? 'none' : 'flex';
+    });
+
+    document.getElementById('blockDateForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const dateVal = document.getElementById('blockDate').value;
+      const reason = document.getElementById('blockReason').value.trim();
+      const isWholeDay = document.getElementById('blockWholeDay').checked;
+      if (!dateVal) return;
+
+      let rows;
+      if (isWholeDay) {
+        rows = [{ blocked_date: dateVal, blocked_time: null, reason }];
+      } else {
+        const fromVal = document.getElementById('blockFromTime').value;
+        const toVal = document.getElementById('blockToTime').value;
+        const fromIdx = HOUR_OPTIONS.indexOf(fromVal);
+        const toIdx = HOUR_OPTIONS.indexOf(toVal);
+        if (fromIdx === -1 || toIdx === -1 || fromIdx > toIdx) {
+          alert('"To" needs to be the same time or later than "From."');
+          return;
+        }
+        rows = HOUR_OPTIONS.slice(fromIdx, toIdx + 1).map(h => ({ blocked_date: dateVal, blocked_time: h, reason }));
+      }
+
+      const { error } = await supabaseClient.from('blocked_dates').insert(rows);
+      if (error) { alert('Could not block that: ' + error.message); return; }
+      this.reset();
+      document.getElementById('blockWholeDay').checked = true;
+      document.getElementById('timeRangeFields').style.display = 'none';
+      loadBlockedDates();
+    });
+
+    async function loadBlockedDates() {
+      const list = document.getElementById('blockedList');
+      const { data, error } = await supabaseClient
+        .from('blocked_dates')
+        .select('*')
+        .gte('blocked_date', new Date().toISOString().slice(0, 10))
+        .order('blocked_date', { ascending: true });
+
+      if (error) { list.innerHTML = '<p class="empty">Could not load blocked dates.</p>'; return; }
+      if (!data || data.length === 0) { list.innerHTML = '<p class="empty">No upcoming dates blocked.</p>'; return; }
+
+      list.innerHTML = '';
+      data.forEach(bd => {
+        const chip = document.createElement('div');
+        chip.className = 'blocked-chip';
+        const label = formatDateStr(bd.blocked_date) + (bd.blocked_time ? ' — ' + bd.blocked_time : ' — Whole day') + (bd.reason ? ' · ' + bd.reason : '');
+        chip.innerHTML = `<span></span><button title="Unblock" data-id="${bd.id}">&times;</button>`;
+        chip.querySelector('span').textContent = label;
+        list.appendChild(chip);
+      });
+      list.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', async function () {
+          const { error } = await supabaseClient.from('blocked_dates').delete().eq('id', this.dataset.id);
+          if (!error) loadBlockedDates();
+        });
+      });
+    }
+
+    async function loadBookings() {
+      const list = document.getElementById('bookingsList');
+      const { data, error } = await supabaseClient
+        .from('bookings')
+        .select('*')
+        .order('booking_date', { ascending: true })
+        .order('booking_time', { ascending: true });
+
+      if (error) { list.textContent = 'Could not load bookings.'; console.error(error); return; }
+      if (!data || data.length === 0) { list.textContent = 'No booking requests yet.'; return; }
+
+      list.innerHTML = '';
+      data.forEach(b => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="booking-card-top">
+            <span class="name">${escapeHtml(b.name)}</span>
+            <span class="when">${formatDateStr(b.booking_date)} at ${escapeHtml(b.booking_time)}</span>
+          </div>
+          <div class="booking-meta">
+            <span><strong>Phone:</strong> ${escapeHtml(b.phone) || '—'}</span>
+            <span><strong>Email:</strong> ${escapeHtml(b.email) || '—'}</span>
+            <span><strong>Service:</strong> ${escapeHtml(b.service) || '—'}</span>
+          </div>
+          <div class="booking-meta">
+            <span><strong>Address:</strong> ${escapeHtml(b.address) || '—'}</span>
+          </div>
+          <div class="booking-notes"></div>
+          <div class="booking-actions">
+            <span class="status-tag status-${b.status}">${b.status}</span>
+            <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;color:var(--steel);">
+              Est. duration:
+              <select class="reqDurationSelect" data-id="${b.id}"></select>
+            </label>
+            <button class="btn-confirm" data-id="${b.id}" data-action="confirmed">Confirm</button>
+            <button class="btn-decline" data-id="${b.id}" data-action="declined">Decline</button>
+            <button class="btn-delete" data-id="${b.id}" data-action="delete">Delete</button>
+          </div>
+        `;
+        card.querySelector('.booking-notes').textContent = b.notes || '';
+        const reqDurSel = card.querySelector('.reqDurationSelect');
+        const reqDurVal = b.duration_hours || 2;
+        DURATION_OPTIONS.forEach(n => {
+          reqDurSel.innerHTML += `<option value="${n}" ${n === reqDurVal ? 'selected' : ''}>${n} hour${n > 1 ? 's' : ''}</option>`;
+        });
+        list.appendChild(card);
+      });
+
+      list.querySelectorAll('.reqDurationSelect').forEach(sel => {
+        sel.addEventListener('change', async function () {
+          await supabaseClient.from('bookings').update({ duration_hours: parseInt(this.value, 10) }).eq('id', this.dataset.id);
+          refreshScheduleIfLoaded();
+        });
+      });
+
+      list.querySelectorAll('button[data-action="confirmed"], button[data-action="declined"]').forEach(btn => {
+        btn.addEventListener('click', async function () {
+          const { error } = await supabaseClient.from('bookings').update({ status: this.dataset.action }).eq('id', this.dataset.id);
+          if (!error) { loadBookings(); refreshScheduleIfLoaded(); }
+        });
+      });
+      list.querySelectorAll('button[data-action="delete"]').forEach(btn => {
+        btn.addEventListener('click', async function () {
+          if (!confirm('Delete this booking permanently?')) return;
+          const { error } = await supabaseClient.from('bookings').delete().eq('id', this.dataset.id);
+          if (!error) { loadBookings(); refreshScheduleIfLoaded(); }
+        });
+      });
+    }
+
+    async function refreshScheduleIfLoaded() {
+      if (typeof schedJobsByDate === 'undefined') return;
+      await loadScheduleJobs();
+      renderSchedCalendar();
+      if (schedSelectedDate) {
+        const [y, m, d] = schedSelectedDate.split('-').map(Number);
+        renderSchedDayPanel(new Date(y, m - 1, d));
+      }
+    }
+
+    // ---- Job Schedule ----
+    let schedCurrentMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    let schedSelectedDate = null; // 'YYYY-MM-DD'
+    let schedJobsByDate = {}; // { 'YYYY-MM-DD': [job, job, ...] }
+
+    function schedDateToStr(d) {
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+
+    async function initJobSchedule() {
+      HOUR_OPTIONS.forEach(h => { document.getElementById('aj-time').innerHTML += `<option value="${h}">${h}</option>`; });
+      DURATION_OPTIONS.forEach(n => { document.getElementById('aj-duration').innerHTML += `<option value="${n}" ${n === 2 ? 'selected' : ''}>${n} hour${n > 1 ? 's' : ''}</option>`; });
+      await loadScheduleJobs();
+      renderSchedCalendar();
+    }
+
+    async function loadScheduleJobs() {
+      const { data, error } = await supabaseClient
+        .from('bookings')
+        .select('*')
+        .in('status', ['pending', 'confirmed', 'completed'])
+        .order('booking_time');
+      schedJobsByDate = {};
+      if (!error && data) {
+        data.forEach(job => {
+          if (!schedJobsByDate[job.booking_date]) schedJobsByDate[job.booking_date] = [];
+          schedJobsByDate[job.booking_date].push(job);
+        });
+      }
+    }
+
+    function renderSchedCalendar() {
+      const grid = document.getElementById('schedCalendarGrid');
+      const label = document.getElementById('schedMonthLabel');
+      const year = schedCurrentMonth.getFullYear();
+      const month = schedCurrentMonth.getMonth();
+      label.textContent = schedCurrentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+      grid.innerHTML = '';
+      ['S','M','T','W','T','F','S'].forEach(d => {
+        const el = document.createElement('div');
+        el.className = 'dow';
+        el.textContent = d;
+        grid.appendChild(el);
+      });
+
+      const firstDay = new Date(year, month, 1);
+      const startOffset = firstDay.getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      for (let i = 0; i < startOffset; i++) {
+        const el = document.createElement('div');
+        el.className = 'day empty';
+        grid.appendChild(el);
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const thisDate = new Date(year, month, d);
+        const dStr = schedDateToStr(thisDate);
+        const jobs = schedJobsByDate[dStr] || [];
+
+        const el = document.createElement('div');
+        el.className = 'day' + (dStr === schedSelectedDate ? ' selected' : '');
+        el.innerHTML = `<span>${d}</span>`;
+
+        if (jobs.length > 0) {
+          const dotsWrap = document.createElement('div');
+          dotsWrap.className = 'job-dots';
+          const statuses = new Set(jobs.map(j => j.status));
+          statuses.forEach(s => {
+            const dot = document.createElement('span');
+            dot.className = 'dot-' + s;
+            dotsWrap.appendChild(dot);
+          });
+          el.appendChild(dotsWrap);
+        }
+
+        el.addEventListener('click', () => {
+          schedSelectedDate = dStr;
+          renderSchedCalendar();
+          renderSchedDayPanel(thisDate);
+        });
+        grid.appendChild(el);
+      }
+    }
+
+    function renderSchedDayPanel(dateObj) {
+      const dStr = schedDateToStr(dateObj);
+      document.getElementById('schedDayLabel').textContent = dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+      document.getElementById('addJobToggleBtn').style.display = 'inline-block';
+      document.getElementById('addJobForm').classList.remove('open');
+
+      const jobsWrap = document.getElementById('schedDayJobs');
+      const jobs = (schedJobsByDate[dStr] || []).slice().sort((a, b) => a.booking_time.localeCompare(b.booking_time));
+
+      if (jobs.length === 0) {
+        jobsWrap.innerHTML = '<p class="empty-day">Nothing scheduled yet.</p>';
+        return;
+      }
+
+      jobsWrap.innerHTML = '';
+      jobs.forEach(job => {
+        const card = document.createElement('div');
+        card.className = 'sched-job-card' + (job.status === 'completed' ? ' completed' : '');
+        const durationVal = job.duration_hours || 2;
+        card.innerHTML = `
+          <div class="sched-job-top">
+            <span class="name">${job.booking_time} — ${escapeHtml(job.name)}</span>
+            <span class="status-tag status-${job.status === 'completed' ? 'confirmed' : job.status}">${job.status}</span>
+          </div>
+          <div class="sched-job-meta"></div>
+          <div class="sched-job-actions">
+            <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;color:var(--steel);">
+              Est. duration:
+              <select class="durationSelect" data-id="${job.id}"></select>
+            </label>
+            ${job.status !== 'completed' ? `<button class="btn-complete" data-id="${job.id}">Mark Completed</button>` : `<button class="btn-undo" data-id="${job.id}">Undo</button>`}
+            <a href="/admin/invoices.html?bookingId=${job.id}" style="background:var(--charcoal);color:#fff;border:none;padding:7px 14px;border-radius:2px;font-weight:700;font-size:0.8rem;text-decoration:none;display:inline-block;">Create Invoice</a>
+          </div>
+        `;
+        const metaParts = [];
+        if (job.phone) metaParts.push('Phone: ' + job.phone);
+        if (job.service) metaParts.push('Service: ' + job.service);
+        if (job.address) metaParts.push('Address: ' + job.address);
+        if (job.notes) metaParts.push('Notes: ' + job.notes);
+        card.querySelector('.sched-job-meta').textContent = metaParts.join(' · ');
+
+        const durSel = card.querySelector('.durationSelect');
+        DURATION_OPTIONS.forEach(n => {
+          durSel.innerHTML += `<option value="${n}" ${n === durationVal ? 'selected' : ''}>${n} hour${n > 1 ? 's' : ''}</option>`;
+        });
+
+        jobsWrap.appendChild(card);
+      });
+
+      jobsWrap.querySelectorAll('.durationSelect').forEach(sel => {
+        sel.addEventListener('change', async function () {
+          await supabaseClient.from('bookings').update({ duration_hours: parseInt(this.value, 10) }).eq('id', this.dataset.id);
+          await loadScheduleJobs();
+        });
+      });
+
+      jobsWrap.querySelectorAll('.btn-complete').forEach(btn => {
+        btn.addEventListener('click', async function () {
+          await supabaseClient.from('bookings').update({ status: 'completed' }).eq('id', this.dataset.id);
+          await loadScheduleJobs();
+          renderSchedCalendar();
+          renderSchedDayPanel(dateObj);
+        });
+      });
+      jobsWrap.querySelectorAll('.btn-undo').forEach(btn => {
+        btn.addEventListener('click', async function () {
+          await supabaseClient.from('bookings').update({ status: 'confirmed' }).eq('id', this.dataset.id);
+          await loadScheduleJobs();
+          renderSchedCalendar();
+          renderSchedDayPanel(dateObj);
+        });
+      });
+    }
+
+    document.getElementById('schedPrev').addEventListener('click', () => {
+      schedCurrentMonth = new Date(schedCurrentMonth.getFullYear(), schedCurrentMonth.getMonth() - 1, 1);
+      renderSchedCalendar();
+    });
+    document.getElementById('schedNext').addEventListener('click', () => {
+      schedCurrentMonth = new Date(schedCurrentMonth.getFullYear(), schedCurrentMonth.getMonth() + 1, 1);
+      renderSchedCalendar();
+    });
+
+    document.getElementById('addJobToggleBtn').addEventListener('click', function () {
+      document.getElementById('addJobForm').classList.toggle('open');
+    });
+
+    document.getElementById('addJobForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      if (!schedSelectedDate) return;
+      const name = document.getElementById('aj-name').value.trim();
+      const phone = document.getElementById('aj-phone').value.trim();
+      const address = document.getElementById('aj-address').value.trim();
+      const time = document.getElementById('aj-time').value;
+      const duration = parseInt(document.getElementById('aj-duration').value, 10) || 2;
+      const service = document.getElementById('aj-service').value;
+      const notes = document.getElementById('aj-notes').value.trim();
+
+      const { error } = await supabaseClient.from('bookings').insert([{
+        name, phone, address, service, notes,
+        booking_date: schedSelectedDate,
+        booking_time: time,
+        duration_hours: duration,
+        status: 'confirmed'
+      }]);
+
+      if (error) { alert('Could not add job: ' + error.message); return; }
+
+      this.reset();
+      this.classList.remove('open');
+      await loadScheduleJobs();
+      renderSchedCalendar();
+      const [y, m, d] = schedSelectedDate.split('-').map(Number);
+      renderSchedDayPanel(new Date(y, m - 1, d));
+    });
+  </script>
+</body>
+</html>

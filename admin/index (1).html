@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin Login | Kimble Solutions</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--charcoal:#18181b;--charcoal-2:#232327;--green:#183B35;--green-bright:#2f7a6b;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Work Sans',sans-serif;background:var(--charcoal);color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .card{background:var(--charcoal-2);border:1px solid #3a3a3f;border-radius:4px;padding:40px 34px;max-width:380px;width:100%;}
+  h1{font-family:'Anton',sans-serif;text-transform:uppercase;font-size:1.5rem;margin-bottom:6px;}
+  p.sub{color:#9a9a9f;font-size:0.9rem;margin-bottom:26px;}
+  label{display:block;font-size:0.85rem;font-weight:600;margin-bottom:6px;color:#d8d7d3;}
+  input{width:100%;padding:12px 14px;background:var(--charcoal);border:1px solid #3a3a3f;border-radius:2px;color:#fff;font-family:inherit;font-size:0.95rem;margin-bottom:16px;}
+  input:focus{outline:none;border-color:var(--green-bright);}
+  button{width:100%;padding:13px;background:var(--green);color:#fff;border:none;border-radius:2px;font-weight:700;font-size:0.95rem;cursor:pointer;font-family:inherit;}
+  button:hover{background:var(--green-bright);}
+  button:disabled{opacity:0.6;cursor:not-allowed;}
+  .error{color:#e5828f;font-size:0.85rem;margin-top:14px;min-height:1em;}
+</style>
+</head>
+<body>
+  <div class="card">
+    <img src="/logo-light.png" alt="Kimble Solutions logo" style="height:70px;width:auto;margin:0 auto 18px;display:block;">
+    <h1>Admin Login</h1>
+    <p class="sub">Kimble Solutions — staff only</p>
+    <form id="loginForm">
+      <label for="email">Email</label>
+      <input id="email" type="email" required autocomplete="username">
+      <label for="password">Password</label>
+      <input id="password" type="password" required autocomplete="current-password">
+      <button type="submit">Log In</button>
+      <p class="error" id="loginError"></p>
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/supabase-config.js"></script>
+  <script>
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    (async function checkExistingSession() {
+      const { data } = await supabaseClient.auth.getSession();
+      if (data.session) window.location.href = '/admin/dashboard.html';
+    })();
+
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const errorEl = document.getElementById('loginError');
+      const btn = e.target.querySelector('button');
+      errorEl.textContent = '';
+      btn.disabled = true;
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        errorEl.textContent = 'Login failed — check your email and password.';
+        btn.disabled = false;
+        return;
+      }
+      window.location.href = '/admin/dashboard.html';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin Dashboard | Kimble Solutions</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--charcoal:#18181b;--charcoal-2:#232327;--green:#183B35;--green-bright:#2f7a6b;--paper:#f4f3ef;--steel:#5a5a61;--line:#dedcd5;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Work Sans',sans-serif;background:var(--paper);color:var(--charcoal);}
+  header{background:var(--charcoal);color:#fff;padding:18px 28px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10;}
+  header h1{font-family:'Anton',sans-serif;text-transform:uppercase;font-size:1.1rem;letter-spacing:0.02em;}
+  header button{background:transparent;border:1px solid #45454b;color:#fff;padding:9px 16px;border-radius:2px;cursor:pointer;font-family:inherit;font-weight:600;}
+  header button:hover{background:var(--charcoal-2);}
+  main{max-width:1000px;margin:0 auto;padding:36px 24px 90px;}
+  h2{font-family:'Anton',sans-serif;text-transform:uppercase;font-size:1.25rem;margin-bottom:18px;}
+  section{margin-bottom:56px;}
+  .quote-card{background:#fff;border:1px solid var(--line);border-radius:3px;padding:22px;margin-bottom:16px;}
+  .quote-card-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px;}
+  .quote-card-top .name{font-weight:700;font-size:1.1rem;}
+  .quote-card-top .time{color:var(--steel);font-size:0.85rem;}
+  .quote-meta{display:flex;flex-wrap:wrap;gap:16px;color:var(--steel);font-size:0.9rem;margin-bottom:12px;}
+  .quote-meta strong{color:var(--charcoal);}
+  .quote-details{font-size:0.95rem;margin-bottom:14px;color:var(--charcoal);white-space:pre-wrap;}
+  .quote-photos{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+  .quote-photos img{width:100px;height:100px;object-fit:cover;border-radius:2px;border:1px solid var(--line);}
+  .quote-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  select{padding:8px 10px;border-radius:2px;border:1px solid var(--line);font-family:inherit;}
+  .btn-booking-link{
+    background:var(--charcoal);color:#fff;border:none;padding:8px 14px;border-radius:2px;
+    font-weight:700;font-size:0.8rem;cursor:pointer;font-family:inherit;
+  }
+  .btn-booking-link:hover{background:var(--charcoal-2);}
+  .btn-delete-quote{
+    background:transparent;color:var(--green);border:1px solid var(--green);
+    padding:8px 14px;border-radius:2px;font-weight:700;font-size:0.8rem;cursor:pointer;font-family:inherit;
+  }
+  .btn-delete-quote:hover{background:var(--green);color:#fff;}
+  .status-tag{font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.03em;}
+  .status-new{background:#183B35;color:#fff;}
+  .status-contacted{background:#fff3d6;color:#8a6100;}
+  .status-scheduled{background:#dfe9ff;color:#1e4fa3;}
+  .status-done{background:#dff5e3;color:#227a3f;}
+  .empty{color:var(--steel);font-size:0.95rem;}
+
+  .review-card{background:#fff;border:1px solid var(--line);border-radius:3px;padding:20px;margin-bottom:14px;}
+  .review-card-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:8px;}
+  .review-card-top .name{font-weight:700;}
+  .review-card .stars{color:var(--green-bright);font-size:0.95rem;letter-spacing:1px;margin-bottom:8px;}
+  .review-card .review-text{font-size:0.95rem;color:var(--charcoal);margin-bottom:14px;}
+  .review-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .review-actions button{
+    border:none;border-radius:2px;padding:8px 16px;font-weight:700;font-size:0.85rem;
+    cursor:pointer;font-family:inherit;
+  }
+  .btn-approve{background:#227a3f;color:#fff;}
+  .btn-approve:hover{background:#1c6534;}
+  .btn-reject{background:#8a6100;color:#fff;}
+  .btn-reject:hover{background:#6f4e00;}
+  .btn-delete{background:transparent;color:var(--green);border:1px solid var(--green) !important;}
+  .btn-delete:hover{background:var(--green);color:#fff;}
+
+  .gallery-upload{background:#fff;border:1px solid var(--line);border-radius:3px;padding:22px;margin-bottom:20px;}
+  .gallery-upload label{display:block;font-weight:600;margin-bottom:10px;}
+  .gallery-upload input[type=file]{margin-bottom:12px;display:block;}
+  .gallery-upload button{background:var(--green);color:#fff;border:none;padding:11px 22px;border-radius:2px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .gallery-upload button:hover{background:var(--green-bright);}
+  .caption-preview-row{
+    display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);
+  }
+  .caption-preview-row .fname{flex:0 0 160px;font-size:0.85rem;color:var(--steel);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .caption-preview-row input{
+    flex:1;padding:8px 10px;border:1px solid var(--line);border-radius:2px;font-family:inherit;font-size:0.88rem;
+  }
+  .gallery-manage-tile .caption-input{
+    width:100%;margin-top:6px;padding:6px 8px;border:1px solid var(--line);border-radius:2px;
+    font-family:inherit;font-size:0.8rem;
+  }
+  .gallery-manage-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(150px,1fr));gap:14px;}
+  .gallery-manage-tile{position:relative;border-radius:2px;border:1px solid var(--line);background:#fff;overflow:hidden;}
+  .gallery-manage-tile .thumb-wrap{position:relative;aspect-ratio:1/1;overflow:hidden;}
+  .gallery-manage-tile img{width:100%;height:100%;object-fit:cover;display:block;}
+  .gallery-manage-tile button{position:absolute;top:6px;right:6px;background:rgba(24,24,27,0.85);color:#fff;border:none;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:0.85rem;line-height:1;}
+  .gallery-manage-tile .caption-input-wrap{padding:8px;}
+  .upload-status{font-size:0.85rem;color:var(--steel);margin-top:8px;}
+</style>
+</head>
+<body>
+  <header>
+    <h1>Kimble Solutions — Admin</h1>
+    <div style="display:flex;gap:10px;">
+      <a href="/admin/availability.html" style="background:transparent;border:1px solid #45454b;color:#fff;padding:9px 16px;border-radius:2px;font-weight:600;font-size:0.9rem;text-decoration:none;">Availability &amp; Bookings</a>
+      <a href="/admin/invoices.html" style="background:transparent;border:1px solid #45454b;color:#fff;padding:9px 16px;border-radius:2px;font-weight:600;font-size:0.9rem;text-decoration:none;">Invoices</a>
+      <button id="logoutBtn">Log Out</button>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Quote Requests</h2>
+      <div id="quotesList" class="empty">Loading...</div>
+    </section>
+
+    <section>
+      <h2>Reviews</h2>
+      <div id="reviewsList" class="empty">Loading...</div>
+    </section>
+
+    <section>
+      <h2>Gallery Photos</h2>
+      <div class="gallery-upload">
+        <label for="galleryFiles">Upload new photos — these appear on the live site's gallery instantly, no code changes needed.</label>
+        <input id="galleryFiles" type="file" accept="image/*" multiple>
+        <div id="captionPreviewList"></div>
+        <button id="galleryUploadBtn">Upload to Gallery</button>
+        <p class="upload-status" id="galleryUploadStatus"></p>
+      </div>
+      <div id="galleryManageGrid" class="gallery-manage-grid"></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/supabase-config.js"></script>
+  <script>
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    (async function guard() {
+      const { data } = await supabaseClient.auth.getSession();
+      if (!data.session) { window.location.href = '/admin'; return; }
+      loadQuotes();
+      loadReviews();
+      loadGalleryManage();
+    })();
+
+    document.getElementById('logoutBtn').addEventListener('click', async function () {
+      try {
+        await supabaseClient.auth.signOut();
+      } catch (err) {
+        console.error('Sign out error:', err);
+      }
+      window.location.href = '/admin';
+    });
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str || '';
+      return div.innerHTML;
+    }
+
+    async function loadQuotes() {
+      const list = document.getElementById('quotesList');
+      const { data, error } = await supabaseClient
+        .from('quote_requests')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) { list.textContent = 'Could not load quote requests.'; console.error(error); return; }
+      if (!data || data.length === 0) { list.textContent = 'No quote requests yet.'; return; }
+
+      list.innerHTML = '';
+      for (const q of data) {
+        const card = document.createElement('div');
+        card.className = 'quote-card';
+
+        let photosHtml = '';
+        if (q.photo_paths && q.photo_paths.length > 0) {
+          const urls = await Promise.all(q.photo_paths.map(async (p) => {
+            const { data: signed } = await supabaseClient.storage.from('quote-photos').createSignedUrl(p, 3600);
+            return signed ? signed.signedUrl : null;
+          }));
+          photosHtml = '<div class="quote-photos">' + urls.filter(Boolean).map(u => `<img src="${u}" alt="Job photo">`).join('') + '</div>';
+        }
+
+        card.innerHTML = `
+          <div class="quote-card-top">
+            <span class="name">${escapeHtml(q.name || 'Unknown')}</span>
+            <span class="time">${new Date(q.created_at).toLocaleString()}</span>
+          </div>
+          <div class="quote-meta">
+            <span><strong>Phone:</strong> ${escapeHtml(q.phone) || '—'}</span>
+            <span><strong>Email:</strong> ${escapeHtml(q.email) || '—'}</span>
+            <span><strong>Service:</strong> ${escapeHtml(q.service) || '—'}</span>
+            <span><strong>Prefers:</strong> ${escapeHtml(q.contact_pref) || '—'}</span>
+          </div>
+          <div class="quote-details">${escapeHtml(q.details)}</div>
+          ${photosHtml}
+          <div class="quote-actions">
+            <span class="status-tag status-${q.status}">${q.status}</span>
+            <select data-id="${q.id}" class="statusSelect">
+              <option value="new" ${q.status === 'new' ? 'selected' : ''}>New</option>
+              <option value="contacted" ${q.status === 'contacted' ? 'selected' : ''}>Contacted</option>
+              <option value="scheduled" ${q.status === 'scheduled' ? 'selected' : ''}>Scheduled</option>
+              <option value="done" ${q.status === 'done' ? 'selected' : ''}>Done</option>
+            </select>
+            <button class="btn-booking-link" data-id="${q.id}" data-name="${escapeHtml(q.name || '')}" data-phone="${escapeHtml(q.phone || '')}" data-email="${escapeHtml(q.email || '')}" data-service="${escapeHtml(q.service || '')}">Copy Booking Link</button>
+            ${q.status === 'done' ? `<button class="btn-delete-quote" data-id="${q.id}">Delete</button>` : ''}
+          </div>
+        `;
+        list.appendChild(card);
+      }
+
+      document.querySelectorAll('.statusSelect').forEach(sel => {
+        sel.addEventListener('change', async function () {
+          const id = this.dataset.id;
+          const { error } = await supabaseClient.from('quote_requests').update({ status: this.value }).eq('id', id);
+          if (!error) loadQuotes();
+        });
+      });
+
+      document.querySelectorAll('.btn-booking-link').forEach(btn => {
+        btn.addEventListener('click', async function () {
+          const url = buildBookingLink({
+            quoteId: this.dataset.id,
+            name: this.dataset.name,
+            phone: this.dataset.phone,
+            email: this.dataset.email,
+            service: this.dataset.service
+          });
+          try {
+            await navigator.clipboard.writeText(url);
+            const original = this.textContent;
+            this.textContent = 'Copied!';
+            setTimeout(() => { this.textContent = original; }, 1500);
+          } catch (err) {
+            prompt('Copy this link:', url);
+          }
+        });
+      });
+
+      document.querySelectorAll('.btn-delete-quote').forEach(btn => {
+        btn.addEventListener('click', async function () {
+          if (!confirm('Delete this quote request permanently?')) return;
+          const { error } = await supabaseClient.from('quote_requests').delete().eq('id', this.dataset.id);
+          if (!error) loadQuotes();
+        });
+      });
+    }
+
+    function buildBookingLink({ quoteId, name, phone, email, service }) {
+      const url = new URL(window.location.origin + '/book.html');
+      if (quoteId) url.searchParams.set('quoteId', quoteId);
+      if (name) url.searchParams.set('name', name);
+      if (phone) url.searchParams.set('phone', phone);
+      if (email) url.searchParams.set('email', email);
+      if (service) url.searchParams.set('service', service);
+      return url.toString();
+    }
+
+    async function loadReviews() {
+      const list = document.getElementById('reviewsList');
+      const { data, error } = await supabaseClient
+        .from('reviews')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) { list.textContent = 'Could not load reviews.'; console.error(error); return; }
+      if (!data || data.length === 0) { list.textContent = 'No reviews yet.'; return; }
+
+      list.innerHTML = '';
+      data.forEach(r => {
+        const card = document.createElement('div');
+        card.className = 'review-card';
+        const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+        card.innerHTML = `
+          <div class="review-card-top">
+            <span class="name">${escapeHtml(r.name)}${r.town ? ' · ' + escapeHtml(r.town) : ''}</span>
+            <span class="status-tag status-${r.status === 'approved' ? 'done' : (r.status === 'rejected' ? 'new' : 'contacted')}">${r.status}</span>
+          </div>
+          <div class="stars">${stars}</div>
+          <div class="review-text"></div>
+          <div class="review-actions">
+            <button class="btn-approve" data-id="${r.id}" data-action="approved">Approve</button>
+            <button class="btn-reject" data-id="${r.id}" data-action="rejected">Reject</button>
+            <button class="btn-delete" data-id="${r.id}" data-action="delete">Delete</button>
+          </div>
+        `;
+        card.querySelector('.review-text').textContent = r.review_text;
+        list.appendChild(card);
+      });
+
+      list.querySelectorAll('button[data-action="approved"], button[data-action="rejected"]').forEach(btn => {
+        btn.addEventListener('click', async function () {
+          const { error } = await supabaseClient.from('reviews').update({ status: this.dataset.action }).eq('id', this.dataset.id);
+          if (!error) loadReviews();
+        });
+      });
+      list.querySelectorAll('button[data-action="delete"]').forEach(btn => {
+        btn.addEventListener('click', async function () {
+          if (!confirm('Delete this review permanently?')) return;
+          const { error } = await supabaseClient.from('reviews').delete().eq('id', this.dataset.id);
+          if (!error) loadReviews();
+        });
+      });
+    }
+
+    document.getElementById('galleryFiles').addEventListener('change', function () {
+      const previewList = document.getElementById('captionPreviewList');
+      previewList.innerHTML = '';
+      Array.from(this.files).forEach((file, i) => {
+        const row = document.createElement('div');
+        row.className = 'caption-preview-row';
+        row.innerHTML = `
+          <span class="fname"></span>
+          <input type="text" class="caption-input-new" placeholder="e.g. Garage Cleanout - Denver" data-index="${i}">
+        `;
+        row.querySelector('.fname').textContent = file.name;
+        previewList.appendChild(row);
+      });
+    });
+
+    document.getElementById('galleryUploadBtn').addEventListener('click', async function () {
+      const files = document.getElementById('galleryFiles').files;
+      const statusEl = document.getElementById('galleryUploadStatus');
+      if (!files || files.length === 0) { statusEl.textContent = 'Choose at least one photo first.'; return; }
+      const captionInputs = document.querySelectorAll('.caption-input-new');
+      statusEl.textContent = 'Uploading...';
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const caption = captionInputs[i] ? captionInputs[i].value.trim() : '';
+        const path = `${crypto.randomUUID()}-${file.name}`;
+        const { error: uploadError } = await supabaseClient.storage.from('gallery-photos').upload(path, file);
+        if (uploadError) { statusEl.textContent = 'Upload failed: ' + uploadError.message; return; }
+
+        if (caption) {
+          const { error: captionError } = await supabaseClient.from('gallery_photos').insert([{ file_path: path, caption }]);
+          if (captionError) console.error('Could not save caption:', captionError);
+        }
+      }
+      statusEl.textContent = 'Uploaded! Live on the site now.';
+      document.getElementById('galleryFiles').value = '';
+      document.getElementById('captionPreviewList').innerHTML = '';
+      loadGalleryManage();
+    });
+
+    async function loadGalleryManage() {
+      const grid = document.getElementById('galleryManageGrid');
+      const { data, error } = await supabaseClient.storage.from('gallery-photos').list('', {
+        sortBy: { column: 'created_at', order: 'desc' }
+      });
+      if (error || !data) { grid.innerHTML = '<p class="empty">Could not load gallery photos.</p>'; return; }
+      const files = data.filter(f => f.name !== '.emptyFolderPlaceholder');
+      if (files.length === 0) { grid.innerHTML = '<p class="empty">No gallery photos uploaded yet.</p>'; return; }
+
+      const { data: captionRows } = await supabaseClient.from('gallery_photos').select('file_path, caption');
+      const captionMap = {};
+      (captionRows || []).forEach(row => { captionMap[row.file_path] = row.caption; });
+
+      grid.innerHTML = '';
+      files.forEach(file => {
+        const { data: urlData } = supabaseClient.storage.from('gallery-photos').getPublicUrl(file.name);
+        const tile = document.createElement('div');
+        tile.className = 'gallery-manage-tile';
+        tile.innerHTML = `
+          <div class="thumb-wrap">
+            <img src="${urlData.publicUrl}" alt="Gallery photo">
+            <button title="Delete" data-name="${file.name}">&times;</button>
+          </div>
+          <div class="caption-input-wrap">
+            <input type="text" class="caption-input" placeholder="Add a caption..." data-name="${file.name}" value="${escapeHtml(captionMap[file.name] || '')}">
+          </div>
+        `;
+        grid.appendChild(tile);
+      });
+
+      document.querySelectorAll('.gallery-manage-tile button').forEach(btn => {
+        btn.addEventListener('click', async function () {
+          if (!confirm('Delete this photo from the live gallery?')) return;
+          await supabaseClient.storage.from('gallery-photos').remove([this.dataset.name]);
+          await supabaseClient.from('gallery_photos').delete().eq('file_path', this.dataset.name);
+          loadGalleryManage();
+        });
+      });
+
+      document.querySelectorAll('.caption-input').forEach(input => {
+        let saveTimeout;
+        input.addEventListener('input', function () {
+          clearTimeout(saveTimeout);
+          saveTimeout = setTimeout(async () => {
+            await supabaseClient.from('gallery_photos').upsert(
+              [{ file_path: this.dataset.name, caption: this.value.trim() }],
+              { onConflict: 'file_path' }
+            );
+          }, 700);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
