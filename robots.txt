@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /book.html
+
+Sitemap: https://kimblesolutions.com/sitemap.xml

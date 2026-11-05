@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Book Your Job | Kimble Solutions</title>
+<link rel="icon" href="logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --charcoal:#18181b;--charcoal-2:#232327;--green:#183B35;--green-bright:#2f7a6b;
+    --paper:#f4f3ef;--white:#ffffff;--steel:#5a5a61;--line:#dedcd5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Work Sans',sans-serif;background:var(--paper);color:var(--charcoal);line-height:1.5;}
+  h1,h2,h3{font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:0.01em;line-height:0.95;}
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:640px;margin:0 auto;padding:0 24px;}
+
+  header{background:var(--white);border-bottom:1px solid var(--line);padding:16px 24px;}
+  .header-inner{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:12px;}
+  .header-inner img{height:52px;width:auto;}
+  .brand-text{font-family:'Anton',sans-serif;font-size:0.95rem;line-height:1.05;text-transform:uppercase;}
+  .brand-text span{display:block;color:var(--green);font-size:0.78rem;}
+
+  .intro{padding:44px 0 8px;text-align:center;}
+  .intro .eyebrow{
+    display:inline-block;font-size:0.78rem;font-weight:700;letter-spacing:0.16em;
+    text-transform:uppercase;color:var(--green);margin-bottom:14px;
+  }
+  .intro h1{font-size:clamp(1.9rem,6vw,2.6rem);color:var(--charcoal);margin-bottom:10px;}
+  .intro p{color:var(--steel);font-size:1rem;max-width:480px;margin:0 auto;}
+  .quote-ref{
+    margin-top:18px;background:var(--white);border:1px solid var(--line);border-radius:2px;
+    padding:14px 18px;font-size:0.9rem;color:var(--charcoal);display:inline-block;
+  }
+  .quote-ref strong{color:var(--green);}
+
+  main{padding:36px 0 90px;}
+
+  .calendar-wrap{
+    background:var(--white);border:1px solid var(--line);border-radius:2px;padding:24px;
+  }
+  .calendar-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+  .calendar-header button{
+    background:var(--paper);border:1px solid var(--line);border-radius:2px;
+    width:34px;height:34px;cursor:pointer;font-size:1rem;color:var(--charcoal);
+  }
+  .calendar-header button:hover{background:var(--line);}
+  .calendar-header span{font-family:'Anton',sans-serif;text-transform:uppercase;font-size:1rem;letter-spacing:0.02em;}
+  .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+  .calendar-grid .dow{
+    text-align:center;font-size:0.72rem;font-weight:700;color:var(--steel);
+    text-transform:uppercase;padding-bottom:6px;
+  }
+  .calendar-grid .day{
+    aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;
+    border-radius:2px;font-size:0.88rem;cursor:pointer;background:var(--paper);
+    border:1px solid var(--line);color:var(--charcoal);position:relative;
+  }
+  .calendar-grid .day:hover{border-color:var(--green);}
+  .calendar-grid .day.empty{background:transparent;border:none;cursor:default;}
+  .calendar-grid .day.disabled{background:transparent;border:1px solid transparent;color:#c9c8c4;cursor:not-allowed;}
+  .calendar-grid .day.selected{background:var(--green);border-color:var(--green);color:var(--white);}
+  .calendar-grid .day .dot{position:absolute;bottom:4px;width:4px;height:4px;border-radius:50%;background:var(--green-bright);}
+  .calendar-grid .day.selected .dot{background:var(--white);}
+
+  .time-slots-wrap{margin:26px 0 0;}
+  .time-slots-wrap h3{
+    font-family:'Work Sans',sans-serif;font-weight:700;font-size:0.98rem;
+    text-transform:none;letter-spacing:normal;margin-bottom:12px;color:var(--charcoal);
+  }
+  .time-slots-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .time-slot-btn{
+    padding:10px 8px;background:var(--white);border:1px solid var(--line);
+    border-radius:2px;font-family:inherit;font-size:0.85rem;cursor:pointer;color:var(--charcoal);
+  }
+  .time-slot-btn:hover{border-color:var(--green);}
+  .time-slot-btn.selected{background:var(--green);border-color:var(--green);color:var(--white);}
+  .time-slot-btn .req-badge{display:block;font-size:0.68rem;color:var(--green-bright);margin-top:2px;}
+  .time-slot-btn.selected .req-badge{color:#f0d5d8;}
+  .time-slot-btn.blocked{
+    background:transparent;border-color:transparent;color:#c9c8c4;cursor:not-allowed;
+  }
+  .time-slot-btn.blocked .req-badge{color:#c9c8c4;}
+
+  .booking-form{margin:26px 0 0;}
+  .booking-form label{display:block;font-size:0.85rem;font-weight:600;margin-bottom:7px;color:var(--charcoal);}
+  .booking-form input,
+  .booking-form select,
+  .booking-form textarea{
+    width:100%;padding:12px 14px;background:var(--white);
+    border:1px solid var(--line);border-radius:2px;color:var(--charcoal);
+    font-family:inherit;font-size:0.95rem;margin-bottom:16px;
+  }
+  .booking-form textarea{resize:vertical;min-height:80px;}
+  .booking-form .selected-summary{
+    background:var(--white);border:1px solid var(--line);border-radius:2px;
+    padding:12px 14px;margin-bottom:18px;font-size:0.9rem;color:var(--charcoal);
+  }
+  .btn-primary{
+    background:var(--green);color:var(--white);width:100%;
+    padding:16px;font-weight:700;font-size:1rem;border-radius:2px;border:none;
+    cursor:pointer;font-family:inherit;
+  }
+  .btn-primary:hover{background:var(--green-bright);}
+  .btn-primary:disabled{opacity:0.6;cursor:not-allowed;}
+  .booking-status{text-align:center;color:var(--steel);font-size:0.9rem;margin-top:14px;}
+
+  .back-link{display:block;text-align:center;margin-top:26px;color:var(--steel);font-size:0.88rem;text-decoration:underline;}
+
+  .confirmation{
+    background:var(--white);border:1px solid var(--line);border-radius:2px;
+    padding:44px 32px;text-align:center;
+  }
+  .confirmation .check-icon{
+    width:56px;height:56px;border-radius:50%;background:#dff5e3;
+    display:flex;align-items:center;justify-content:center;margin:0 auto 20px;
+  }
+  .confirmation .check-icon svg{width:28px;height:28px;color:#227a3f;stroke:currentColor;fill:none;stroke-width:2.2;}
+  .confirmation h2{font-size:1.5rem;color:var(--charcoal);margin-bottom:10px;}
+  .confirmation p.lead{color:var(--steel);font-size:0.98rem;max-width:400px;margin:0 auto 22px;}
+  .confirmation .details{
+    background:var(--paper);border:1px solid var(--line);border-radius:2px;
+    padding:18px 20px;text-align:left;font-size:0.92rem;color:var(--charcoal);
+    max-width:400px;margin:0 auto;
+  }
+  .confirmation .details div{padding:4px 0;}
+  .confirmation .details strong{color:var(--green);}
+  .confirmation .fine{color:var(--steel);font-size:0.85rem;margin-top:22px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <img src="logo.png" alt="Kimble Solutions logo">
+  </div>
+</header>
+
+<div class="intro">
+  <div class="wrap">
+    <span class="eyebrow">Book Your Job</span>
+    <h1>Pick a Time That Works</h1>
+    <p>Choose a date and time below and we'll lock it in once we confirm.</p>
+    <div class="quote-ref" id="quoteRef" style="display:none;"></div>
+  </div>
+</div>
+
+<main>
+  <div class="wrap">
+    <div class="calendar-wrap">
+      <div class="calendar-header">
+        <button type="button" id="calPrev" aria-label="Previous month">&larr;</button>
+        <span id="calMonthLabel"></span>
+        <button type="button" id="calNext" aria-label="Next month">&rarr;</button>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+
+    <div class="time-slots-wrap" id="timeSlotsWrap" style="display:none;">
+      <h3 id="selectedDateLabel"></h3>
+      <div class="time-slots-grid" id="timeSlotsGrid"></div>
+    </div>
+
+    <form class="booking-form" id="bookingForm" style="display:none;">
+      <div class="selected-summary" id="bookingSummary"></div>
+      <label for="bk-name">Full name</label>
+      <input id="bk-name" type="text" placeholder="Jane Smith" required>
+      <label for="bk-phone">Phone number</label>
+      <input id="bk-phone" type="tel" placeholder="(804) 555-0123" required>
+      <label for="bk-email">Email (optional)</label>
+      <input id="bk-email" type="email" placeholder="jane@email.com">
+      <label for="bk-address">Job address</label>
+      <input id="bk-address" type="text" placeholder="123 Main St, Denver, NC" required>
+      <label for="bk-service">Service needed</label>
+      <select id="bk-service" required>
+        <option value="" disabled selected>Select a service</option>
+        <option>Junk Removal</option>
+        <option>Construction Debris Hauling</option>
+        <option>Brush &amp; Small Tree Removal</option>
+        <option>Aggregate Material Delivery/Removal</option>
+        <option>Not Sure / Other (We do it all!)</option>
+      </select>
+      <label for="bk-notes">Notes (optional)</label>
+      <textarea id="bk-notes" placeholder="Anything we should know before we show up?"></textarea>
+      <button type="submit" class="btn-primary">Request This Time</button>
+      <p class="booking-status" id="bookingStatus" aria-live="polite"></p>
+    </form>
+
+    <div class="confirmation" id="confirmationWrap" style="display:none;">
+      <div class="check-icon">
+        <svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <h2>Booking Request Sent!</h2>
+      <p class="lead">Thanks — we've got your request and will text or call to confirm it, usually within a few hours.</p>
+      <div class="details" id="confirmationDetails"></div>
+      <p class="fine">Need to change something? Just call or text us directly.</p>
+    </div>
+
+    <a class="back-link" href="/">&larr; Back to Kimble Solutions</a>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/js/supabase-config.js"></script>
+<script>
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // ---- Read prefill data from the link (admin builds this URL for a specific customer) ----
+  const params = new URLSearchParams(window.location.search);
+  const prefillQuoteId = params.get('quoteId') || null;
+  const prefillName = params.get('name') || '';
+  const prefillPhone = params.get('phone') || '';
+  const prefillEmail = params.get('email') || '';
+  const prefillService = params.get('service') || '';
+
+  if (prefillName) document.getElementById('bk-name').value = prefillName;
+  if (prefillPhone) document.getElementById('bk-phone').value = prefillPhone;
+  if (prefillEmail) document.getElementById('bk-email').value = prefillEmail;
+  if (prefillService) document.getElementById('bk-service').value = prefillService;
+
+  if (prefillName || prefillService) {
+    const ref = document.getElementById('quoteRef');
+    ref.style.display = 'inline-block';
+    ref.innerHTML = 'Booking for <strong>' + (prefillName || 'your job') + '</strong>' +
+      (prefillService ? ' — ' + prefillService : '');
+  }
+
+  // ---- Booking calendar ----
+  let calCurrentMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  let selectedDateStr = null;
+  let selectedTime = null;
+  let blockedDateSet = new Set();
+  let blockedTimesByDate = {}; // { 'YYYY-MM-DD': Set(['9:00 AM', ...]) }
+  let requestedSlots = {};
+  let weeklyHours = {}; // { 0: {is_open, start_time, end_time}, ... 6: {...} }
+
+  function parseHourLabel(label) {
+    const [time, ampm] = label.split(' ');
+    let [h] = time.split(':').map(Number);
+    if (ampm === 'PM' && h !== 12) h += 12;
+    if (ampm === 'AM' && h === 12) h = 0;
+    return h;
+  }
+  function formatHourLabel(h) {
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    let displayH = h % 12;
+    if (displayH === 0) displayH = 12;
+    return displayH + ':00 ' + ampm;
+  }
+  function generateSlotsForDay(dayConfig) {
+    if (!dayConfig || !dayConfig.is_open) return [];
+    const startH = parseHourLabel(dayConfig.start_time);
+    const endH = parseHourLabel(dayConfig.end_time);
+    const slots = [];
+    for (let h = startH; h <= endH; h += 2) slots.push(formatHourLabel(h));
+    return slots;
+  }
+
+  function dateToStr(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
+  async function loadBookingAvailability() {
+    const { data: hours } = await supabaseClient.from('weekly_hours').select('*');
+    weeklyHours = {};
+    (hours || []).forEach(h => { weeklyHours[h.day_of_week] = h; });
+
+    const { data: blocked } = await supabaseClient.from('blocked_dates').select('blocked_date, blocked_time');
+    blockedDateSet = new Set();
+    blockedTimesByDate = {};
+    (blocked || []).forEach(b => {
+      if (!b.blocked_time) {
+        blockedDateSet.add(b.blocked_date);
+      } else {
+        if (!blockedTimesByDate[b.blocked_date]) blockedTimesByDate[b.blocked_date] = new Set();
+        blockedTimesByDate[b.blocked_date].add(b.blocked_time);
+      }
+    });
+
+    const { data: booked } = await supabaseClient.from('bookings_public').select('booking_date, booking_time');
+    requestedSlots = {};
+    (booked || []).forEach(b => {
+      if (!requestedSlots[b.booking_date]) requestedSlots[b.booking_date] = new Set();
+      requestedSlots[b.booking_date].add(b.booking_time);
+    });
+  }
+
+  function renderCalendar() {
+    const grid = document.getElementById('calendarGrid');
+    const label = document.getElementById('calMonthLabel');
+    const year = calCurrentMonth.getFullYear();
+    const month = calCurrentMonth.getMonth();
+    label.textContent = calCurrentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+    grid.innerHTML = '';
+    ['S','M','T','W','T','F','S'].forEach(d => {
+      const el = document.createElement('div');
+      el.className = 'dow';
+      el.textContent = d;
+      grid.appendChild(el);
+    });
+
+    const firstDay = new Date(year, month, 1);
+    const startOffset = firstDay.getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    for (let i = 0; i < startOffset; i++) {
+      const el = document.createElement('div');
+      el.className = 'day empty';
+      grid.appendChild(el);
+    }
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const thisDate = new Date(year, month, d);
+      const dStr = dateToStr(thisDate);
+      const dow = thisDate.getDay();
+      const dayIsClosed = !weeklyHours[dow] || !weeklyHours[dow].is_open;
+      const isPast = thisDate < today;
+      const isBlocked = blockedDateSet.has(dStr);
+      const disabled = dayIsClosed || isPast || isBlocked;
+
+      const el = document.createElement('div');
+      el.className = 'day' + (disabled ? ' disabled' : '') + (dStr === selectedDateStr ? ' selected' : '');
+      el.textContent = String(d);
+
+      if (requestedSlots[dStr] && requestedSlots[dStr].size > 0 && !disabled) {
+        const dot = document.createElement('span');
+        dot.className = 'dot';
+        el.appendChild(dot);
+      }
+
+      if (!disabled) {
+        el.addEventListener('click', () => {
+          selectedDateStr = dStr;
+          selectedTime = null;
+          document.getElementById('bookingForm').style.display = 'none';
+          renderCalendar();
+          renderTimeSlots(thisDate);
+        });
+      }
+      grid.appendChild(el);
+    }
+  }
+
+  function renderTimeSlots(dateObj) {
+    const wrap = document.getElementById('timeSlotsWrap');
+    const gridEl = document.getElementById('timeSlotsGrid');
+    const label = document.getElementById('selectedDateLabel');
+    label.textContent = dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
+    gridEl.innerHTML = '';
+    const dStr = dateToStr(dateObj);
+    const takenTimes = requestedSlots[dStr] || new Set();
+    const blockedTimes = blockedTimesByDate[dStr] || new Set();
+    const dayConfig = weeklyHours[dateObj.getDay()];
+    const slotsForDay = generateSlotsForDay(dayConfig);
+
+    slotsForDay.forEach(t => {
+      const isBlockedTime = blockedTimes.has(t);
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'time-slot-btn' + (t === selectedTime ? ' selected' : '') + (isBlockedTime ? ' blocked' : '');
+      if (isBlockedTime) {
+        btn.disabled = true;
+        btn.innerHTML = t + '<span class="req-badge">Unavailable</span>';
+      } else {
+        btn.innerHTML = t + (takenTimes.has(t) ? '<span class="req-badge">Already requested</span>' : '');
+        btn.addEventListener('click', () => {
+          selectedTime = t;
+          selectedDateStr = dStr;
+          renderTimeSlots(dateObj);
+          showBookingForm(dateObj, t);
+        });
+      }
+      gridEl.appendChild(btn);
+    });
+
+    wrap.style.display = 'block';
+  }
+
+  function showBookingForm(dateObj, time) {
+    const form = document.getElementById('bookingForm');
+    const summary = document.getElementById('bookingSummary');
+    summary.textContent = dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) + ' at ' + time;
+    form.style.display = 'block';
+    form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  document.getElementById('calPrev').addEventListener('click', () => {
+    calCurrentMonth = new Date(calCurrentMonth.getFullYear(), calCurrentMonth.getMonth() - 1, 1);
+    renderCalendar();
+  });
+  document.getElementById('calNext').addEventListener('click', () => {
+    calCurrentMonth = new Date(calCurrentMonth.getFullYear(), calCurrentMonth.getMonth() + 1, 1);
+    renderCalendar();
+  });
+
+  document.getElementById('bookingForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalLabel = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+    const statusEl = document.getElementById('bookingStatus');
+    statusEl.textContent = '';
+
+    try {
+      const name = document.getElementById('bk-name').value.trim();
+      const phone = document.getElementById('bk-phone').value.trim();
+      const email = document.getElementById('bk-email').value.trim();
+      const address = document.getElementById('bk-address').value.trim();
+      const service = document.getElementById('bk-service').value;
+      const notes = document.getElementById('bk-notes').value.trim();
+
+      const insertRow = {
+        name, phone, email, address, service, notes,
+        booking_date: selectedDateStr,
+        booking_time: selectedTime,
+        status: 'pending'
+      };
+      if (prefillQuoteId) insertRow.quote_request_id = prefillQuoteId;
+
+      const { error } = await supabaseClient.from('bookings').insert([insertRow]);
+      if (error) throw error;
+
+      // Show the confirmation screen
+      document.querySelector('.calendar-wrap').style.display = 'none';
+      document.getElementById('timeSlotsWrap').style.display = 'none';
+      this.style.display = 'none';
+
+      const detailsEl = document.getElementById('confirmationDetails');
+      const dateLabel = (function () {
+        const [y, m, d] = selectedDateStr.split('-').map(Number);
+        return new Date(y, m - 1, d).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+      })();
+      detailsEl.innerHTML = `
+        <div><strong>When:</strong> ${dateLabel} at ${selectedTime}</div>
+        <div><strong>Service:</strong> ${service}</div>
+        <div><strong>Address:</strong> ${address}</div>
+        <div><strong>Contact:</strong> ${name} · ${phone}</div>
+      `;
+      document.getElementById('confirmationWrap').style.display = 'block';
+      document.getElementById('confirmationWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (err) {
+      console.error(err);
+      document.getElementById('bookingStatus').textContent = 'Something went wrong submitting that — mind trying again?';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalLabel;
+    }
+  });
+
+  (async function init() {
+    await loadBookingAvailability();
+    renderCalendar();
+  })();
+</script>
+
+</body>
+</html>
